@@ -7,6 +7,7 @@ import os
 import sys
 import time
 import json
+import socket
 import threading
 from pathlib import Path
 from http.server import HTTPServer, BaseHTTPRequestHandler
@@ -15,6 +16,8 @@ from datetime import datetime, timezone
 SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = SCRIPT_DIR.parent.parent.parent.parent
 sys.path.insert(0, str(SCRIPT_DIR))
+
+from iqoption_adapter import CONNECTION_STATE, CONNECT_TIMEOUT_S
 
 # Configuration
 PORT = int(os.environ.get("PORT", 8080))
@@ -118,7 +121,11 @@ class CloudRequestHandler(BaseHTTPRequestHandler):
             "closed_candles": stats["closed_candles"],
             "target_candles": TARGET_CANDLES,
             "file_size_bytes": stats["size_bytes"],
-            "recorder_connected": recorder_status["connected"],
+            "recorder_connected": bool(CONNECTION_STATE["connected"]),
+            "connect_consecutive_failures": CONNECTION_STATE["consecutive_failures"],
+            "connect_last_error": CONNECTION_STATE["last_error"],
+            "connect_last_error_at": CONNECTION_STATE["last_error_at"],
+            "connect_timeout_s": CONNECT_TIMEOUT_S,
             "last_heartbeat": recorder_status["last_heartbeat"]
         }
         payload = json.dumps(data).encode("utf-8")
@@ -135,6 +142,8 @@ class CloudRequestHandler(BaseHTTPRequestHandler):
             "interval_seconds": INTERVAL,
             "raw_file_path": str(RAW_FILE),
             "target_candles": TARGET_CANDLES,
+            "connect_timeout_s": CONNECT_TIMEOUT_S,
+            "connection": dict(CONNECTION_STATE),
             "progress_percent": round((stats["closed_candles"] / TARGET_CANDLES) * 100, 2),
             "stats": stats,
             "recorder_status": recorder_status,
@@ -175,7 +184,11 @@ class CloudRequestHandler(BaseHTTPRequestHandler):
         if stats["last_closed_timestamp"]:
             last_ts_str = datetime.fromtimestamp(stats["last_closed_timestamp"], tz=timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
 
-        conn_badge = '<span style="color:#22c55e;font-weight:bold;">CONNECTED</span>' if recorder_status["connected"] else '<span style="color:#eab308;font-weight:bold;">STANDBY / POLLING</span>'
+        conn_badge = '<span style="color:#22c55e;font-weight:bold;">CONNECTED</span>' if CONNECTION_STATE["connected"] else '<span style="color:#eab308;font-weight:bold;">STANDBY / POLLING</span>'
+        connect_err = CONNECTION_STATE["last_error"]
+        err_html = ""
+        if connect_err:
+            err_html = f'<div class="metric" style="margin-bottom: 24px;"><div class="metric-label">Last Connection Error</div><div style="font-size: 13px; margin-top: 4px;">{connect_err}</div></div>'
         
         html = f"""<!DOCTYPE html>
 <html lang="en">
@@ -241,10 +254,12 @@ class CloudRequestHandler(BaseHTTPRequestHandler):
       </div>
     </div>
 
-    <div class="metric" style="margin-bottom: 24px;">
-      <div class="metric-label">Last Closed Timestamp (UTC)</div>
-      <div style="font-size: 14px; font-weight: 600; margin-top: 4px;">{last_ts_str}</div>
-    </div>
+      <div class="metric" style="margin-bottom: 24px;">
+        <div class="metric-label">Last Closed Timestamp (UTC)</div>
+        <div style="font-size: 14px; font-weight: 600; margin-top: 4px;">{last_ts_str}</div>
+      </div>
+
+      {err_html}
 
     <div style="display:flex; justify-content: space-between; align-items: center;">
       <a href="/download" class="btn">📥 Download Dataset (.jsonl)</a>
@@ -272,6 +287,10 @@ class CloudRequestHandler(BaseHTTPRequestHandler):
 def run_recorder_thread():
     """Runs the recorder loop in background."""
     print(f"[{datetime.now(timezone.utc).isoformat()}] Starting recorder background thread...", flush=True)
+    # Process-wide bound for third-party socket calls without an explicit
+    # timeout, so a stalled venue handshake eventually fails instead of
+    # hanging forever. The dashboard socket is reset to blocking in main().
+    socket.setdefaulttimeout(CONNECT_TIMEOUT_S)
     import recorder
     
     # Monkey-patch or hook into recorder to update status
@@ -308,6 +327,9 @@ def main():
 
     # Start HTTP server
     server = HTTPServer(("0.0.0.0", PORT), CloudRequestHandler)
+    # The recorder thread sets a process-wide default socket timeout; the
+    # dashboard socket must stay blocking (serve_forever() uses select()).
+    server.socket.settimeout(None)
     print(f"HTTP Server listening on 0.0.0.0:{PORT}", flush=True)
     try:
         server.serve_forever()
