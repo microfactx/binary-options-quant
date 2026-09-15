@@ -1,6 +1,6 @@
 # Project State: Binary Options Quant
 
-**Current Phase:** Commit 043 Complete (XAU/XAG Instrument Identity Audit Formalized & Railway 24/7 Cloud Recorder Infrastructure Deployed)
+**Current Phase:** Commit 045 Complete (Single-Session Multi-Stream Recorder Live; XAU/USD 60s+5s Accumulation Started; H008 SPEC_DRAFT Eliciting — NOT FROZEN)
 
 ## Completed Milestones
 1. **Commit 001 - Core Types:** MarketObservation, BinaryOutcome, Signal, ProbabilitySnapshot.
@@ -225,5 +225,19 @@
     - **Cloud Entrypoint & Web Dashboard:** Implemented `cloud_entrypoint.py` serving `/health` (Railway healthcheck), `/metrics`, `/` (HTML progress dashboard towards 10,000 candles), and `/download` (direct one-click `.jsonl` download).
     - **Railway Configuration & Guide:** Authored `railway.json` and comprehensive user guide `docs/RAILWAY_DEPLOYMENT_GUIDE.md`.
     - **Test Coverage:** 100% existing test suites passing without regressions. **[CLOUD DEPLOY INFRASTRUCTURE READY]**
+94. **Commit 044 - Railway Deploy Build Fix, Venue Handshake Diagnosis & First Light:**
+    - **Docker build fix:** `pip install -r requirements.txt` failed with `ResolutionImpossible` (`websocket-client==1.8.0` vs iqoptionapi's `==0.56`); interim two-step install, then root-cause alignment to `websocket-client==0.56` with Dockerfile reverted to single-line install (dry-run proven).
+    - **Connect watchdog:** `iqoption_adapter.connect()` wrapped in worker-thread `join(timeout=IQO_CONNECT_TIMEOUT, 90s)` + `CONNECTION_STATE` telemetry surfaced in `/health`, `/metrics` and dashboard badge (also fixed the dead `connected` indicator).
+    - **Root-cause isolation:** venue reachable; deterministic failure `WebsocketClient.on_message() takes 2 positional arguments but 3 were given` under 1.8.0 — resolved by the 0.56 alignment.
+    - **First light 2026-09-14T23:04:32Z:** `Connection successful. Practice mode asserted.` + `Candle stream started` (XAU/XAG M1), backfill burst #1–#99 + live cadence. **[DEPLOY OPERATIONAL]**
+95. **Commit 045 - Single-Session Multi-Stream Recorder (`IQO_STREAMS`) & XAU/USD Accumulation Start:**
+    - One IQO session multiplexes `XAU/XAG:60` (untouched, same file layout) + `XAUUSD:60` + `XAUUSD:5`; per-stream files, dedup, counters and failure isolation; default env preserves legacy single-stream behavior.
+    - Cloud entrypoint serves per-stream `/health`, `/metrics`, dashboard cards and `/download?stream=ASSET:INTERVAL`.
+    - **Test battery:** `recorder/tests/test_recorder_multistream.py`, 11/11 passing (stdlib unittest, mocked venue, no network).
+    - **Live 2026-09-15:** all three streams nominal (5s cadence exact, cross-granularity closes consistent, XAU/XAG numbering continuous across redeploy via volume + dedup). Two isolated 5s gaps quarantined for canonicalization (#383/TS …140, #468/TS …565).
+    - **Provenance note:** XAU/XAG closed count regressed 108 → 103 across one restart (file reset + venue backfill ≈100); loss bounded, series monotonic since. Volume must not be recreated. **[MULTI-STREAM LIVE]**
+96. **H008 SPEC_DRAFT — Elicitation in Progress (NOT FROZEN, no code, no dispatch):**
+    - Candidate: symmetric M1-stretch fade (`range ≥ 1.5×ATR(14)` Wilder) into 2-pivot HH/HL–LH/LL trendlines (pivot confirmed after 5 M1 bars) or OTE 0.62–0.79 of last impulse if zero valid lines in 120 M1 bars; micro filter on last closed 5s (line-side wick ≥0.35 + pro-fade close); first-touch entry at line price ±0.1×ATR; 1m expiry at next M1 clock close; no breakout filter; no metric tuning (Via A).
+    - Open: XAU/USD 1m payout (→ P_BE), live `active_id` confirmation (library prior: XAUUSD=74), IS/OOS boundaries, adversarial battery, seeds, stopping/promotion rules. Freeze ceremony only after data coverage.
 
-**Next Objective:** Deploy the cloud recorder to Railway following `docs/RAILWAY_DEPLOYMENT_GUIDE.md` with persistent volume `/data`. Accumulate $N \ge 10,000$ closed M1 candles of Active 2071 during regular weekday trading hours. Once $N \ge 10,000$, download the dataset via the `/download` dashboard endpoint, download concurrent Dukascopy spot data for the exact same timeframe, and execute `fidelity_audit_xauxag.js` to evaluate $\rho_{15\text{m}} \ge 0.98$ and $\text{BSIR}_{15\text{m}} \le 2.0\%$.
+**Next Objective:** Keep the Railway recorder accumulating on all three streams (`IQO_STREAMS=XAU/XAG:60,XAUUSD:60,XAUUSD:5`, volume `/data`). XAU/XAG continues toward N ≥ 10,000 closed M1 for the Level 2 fidelity gate; XAU/USD 60s+5s accumulates toward ~30 business days for the H008 IS/OOS design. Then: download via per-stream `/download`, concurrent Dukascopy for the exact span, `fidelity_audit_xauxag.js` (ρ_15m ≥ 0.98, BSIR_15m ≤ 2.0%), and H008 freeze ceremony (payout-confirmed P_BE, blind boundary, battery, seeds).
