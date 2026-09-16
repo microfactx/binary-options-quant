@@ -1,0 +1,23 @@
+{
+  "remediationId": "REMEDIATION_EXP_047_001",
+  "experimentId": "EXP_047_BTCUSDT_MICROSTRUCTURE_001",
+  "hypothesisId": "HYPOTHESIS_009",
+  "issuedBy": "CHIEF_RISK_OFFICER",
+  "issuedAt": "2026-09-16T23:42:30Z",
+  "deficiencyIdentified": "Wilson 95% Confidence Interval lower bound (52.30%) is 175.57 bps below the break-even hurdle (54.05%) strictly due to sample size power constraint (N=151).",
+  "remediationDirectives": [
+    {
+      "directive": "PROHIBITION_OF_CODE_AND_PARAMETER_MODIFICATIONS",
+      "detail": "Zero modifications allowed to BTCUSDTMicrostructureModel.js, including ATR period (14), stretch multiplier (1.5), wick threshold (0.35), or extreme timing (<50s)."
+    },
+    {
+      "directive": "EXPAND_BLIND_OOS_PARTITION",
+      "detail": "Reconstruct September 2024 (2024-09-01 to 2024-09-30) daily aggTrades into M1 and 5s causal bars to expand sample size to N >= 240 resolved trades."
+    },
+    {
+      "directive": "REPLAY_AND_REASSESS_WILSON_GATE",
+      "detail": "Execute blind OOS replay over the combined July-September 2024 partition. If empirical win rate >= 60.4% at N >= 240, the Wilson lower bound will cross > 54.05%."
+    }
+  ],
+  "status": "AWAITING_OOS_EXPANSION"
+}

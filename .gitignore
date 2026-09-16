@@ -11,3 +11,6 @@ research/datasets/**/canonical/
 !research/datasets/.gitkeep
 __pycache__/
 *.pyc
+.venv/
+*.parquet
+research/datasets/**/reconstructed_5s/

@@ -1,0 +1,85 @@
+{
+  "experimentId": "EXP_047_BTCUSDT_MICROSTRUCTURE_001",
+  "hypothesisId": "HYPOTHESIS_009",
+  "status": "COMPLETED",
+  "replayPeriod": "2024-07-01 to 2024-08-31 (62 days)",
+  "payoutRate": 0.85,
+  "breakevenHurdle": 0.5405405405405405,
+  "h009Model": {
+    "n": 151,
+    "wins": 91,
+    "losses": 60,
+    "pushes": 1,
+    "winRate": 0.6026490066225165,
+    "ciLower": 0.5229835019545758,
+    "ciUpper": 0.6772212767662052,
+    "ev": 0.11490066225165552
+  },
+  "reversedControl": {
+    "n": 151,
+    "wins": 60,
+    "losses": 91,
+    "pushes": 1,
+    "winRate": 0.3973509933774834,
+    "ciLower": 0.32277872323379475,
+    "ciUpper": 0.47701649804542423,
+    "ev": -0.26490066225165565
+  },
+  "naiveBaseline": {
+    "n": 86445,
+    "wins": 42957,
+    "losses": 43488,
+    "pushes": 1428,
+    "winRate": 0.49692868297761583,
+    "ciLower": 0.49359585782933124,
+    "ciUpper": 0.5002617810812731,
+    "ev": -0.0806819364914107
+  },
+  "directionalBreakdown": {
+    "call": {
+      "n": 80,
+      "wins": 48,
+      "losses": 32,
+      "pushes": 1,
+      "winRate": 0.6,
+      "ciLower": 0.4904546500516039,
+      "ciUpper": 0.7003817240412906,
+      "ev": 0.10999999999999999
+    },
+    "put": {
+      "n": 71,
+      "wins": 43,
+      "losses": 28,
+      "pushes": 0,
+      "winRate": 0.6056338028169014,
+      "ciLower": 0.48935768499400845,
+      "ciUpper": 0.711065987077071,
+      "ev": 0.12042253521126756
+    },
+    "directionalImbalance": 0.005633802816901401
+  },
+  "gatesEvaluation": {
+    "minSampleGate": {
+      "n": 151,
+      "floor": 100,
+      "status": "PASS"
+    },
+    "statisticalEvidenceGate": {
+      "wilsonLowerBound": 0.5229835019545758,
+      "pBe": 0.5405405405405405,
+      "surplusBps": -175.57,
+      "status": "FAIL"
+    },
+    "reversedControlGate": {
+      "baseWinRate": 0.6026490066225165,
+      "reversedWinRate": 0.3973509933774834,
+      "status": "PASS"
+    },
+    "directionalSymmetryGate": {
+      "delta": 0.56,
+      "threshold": 8.0,
+      "status": "PASS"
+    }
+  },
+  "executedAt": "2026-09-16T23:36:36.975738+00:00"
+}

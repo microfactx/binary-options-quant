@@ -1,0 +1,67 @@
+{
+  "hypothesisId": "HYPOTHESIS_009",
+  "version": "1.0.0",
+  "title": "Cross-Asset Microstructure Wick-Exhaustion & M1-Stretch Reversion on BTC/USDT",
+  "researchFamily": "FAMILY_05_MULTI_TIMEFRAME_EXTREMES",
+  "status": "FROZEN",
+  "parentHypothesis": "HYPOTHESIS_002",
+  "frozenAt": "2026-09-16T23:25:00.000Z",
+  "instrument": {
+    "asset": "BTCUSDT",
+    "name": "Bitcoin / Tether Spot",
+    "venue": "BINANCE_SPOT",
+    "timeframe": "1m_with_5s_micro",
+    "payoutRate": 0.85,
+    "breakevenProbability": 0.5405405405405406,
+    "expirationSeconds": 60,
+    "expirationBars": 1
+  },
+  "dataset": {
+    "datasetId": "DATASET_BTCUSDT_5S_001",
+    "source": "BINANCE_PUBLIC_ARCHIVE_AGGTRADES",
+    "totalRows": 1589760,
+    "dateRange": "2024-06-01T00:00:00.000Z to 2024-08-31T23:59:59.000Z",
+    "inSamplePartition": {
+      "start": "2024-06-01T00:00:00.000Z",
+      "end": "2024-06-30T23:59:59.000Z",
+      "purpose": "Exploratory calibration and microstructural rule discovery"
+    },
+    "outOfSamplePartition": {
+      "start": "2024-07-01T00:00:00.000Z",
+      "end": "2024-08-31T23:59:59.000Z",
+      "purpose": "Strict blind replay and Wilson CI gate"
+    }
+  },
+  "model": {
+    "modelClass": "BTCUSDTMicrostructureModel",
+    "atrPeriod": 14,
+    "stretchMultiplier": 1.5,
+    "wickThreshold": 0.35,
+    "extremeTimingThresholdSec": 50,
+    "rules": {
+      "CALL": "Range_t >= 1.5 * ATR_14(t-1) AND Close_t < Open_t (BEAR M1) AND Last5sWick >= 0.35 AND Close_5s > Open_5s (Pro-Fade) AND ExtremeTiming < 50s",
+      "PUT": "Range_t >= 1.5 * ATR_14(t-1) AND Close_t > Open_t (BULL M1) AND Last5sWick >= 0.35 AND Close_5s < Open_5s (Pro-Fade) AND ExtremeTiming < 50s",
+      "NO_SIGNAL": "Range < 1.5 * ATR, Lack of 5s wick, Counter-fade 5s close, Late extreme (>= 50s), or Lookback < 14"
+    }
+  },
+  "acceptanceCriteria": {
+    "minOosSample": 100,
+    "wilsonLowerBoundThreshold": 0.5405405405405406,
+    "confidenceLevel": 0.95,
+    "maxDirectionalImbalance": 0.08,
+    "superiorityOverNaiveBaseline": true
+  },
+  "adversarialRequirements": [
+    "SyntheticNullMulberry32",
+    "LabelPermutations1000",
+    "ReversedNegativeControl",
+    "LookaheadBoundaryFuzzing",
+    "ZeroRangeGuard"
+  ],
+  "governance": {
+    "failClosed": true,
+    "zeroLookahead": true,
+    "immutableAfterFreeze": true,
+    "postHocTuningForbidden": true
+  }
+}

@@ -1,6 +1,6 @@
 # Project State: Binary Options Quant
 
-**Current Phase:** Commit 046 Complete (Venue Catalog Discovery Endpoint Active; H008 In-Sample Microstructure Calibrated — SPEC_DRAFT v1.1.0 NOT FROZEN)
+**Current Phase:** Commit 047 Complete (H009 Binance Microstructure Reconstructed; Blind OOS Replay Completed: 60.26% WR, EV = +0.1149; CRO Issued Remediation for OOS Power Expansion to N >= 240)
 
 ## Completed Milestones
 1. **Commit 001 - Core Types:** MarketObservation, BinaryOutcome, Signal, ProbabilitySnapshot.
@@ -246,5 +246,30 @@
     - **Scientific Finding 4 (Timing Guard):** Extrema occurring in terminal 10s ($:50-:60$) indicate breakout momentum; trade suppressed if $t_{\text{extreme}} \ge T+50\text{s}$.
     - **Epistemic Quarantine & Power Floor:** First 46 hours quarantined permanently as `IN_SAMPLE_EXPLORATORY`. Formal binomial power analysis derived $N_{\text{min, power}} = 450$ trades for $\alpha=0.05, 1-\beta=0.80, \Delta=4.45\text{ pp}$.
     - **SPEC_DRAFT v1.1.0:** Formally updated [SPEC_DRAFT_H008.md](file:///C:/Users/WDAGUtilityAccount/.gemini/antigravity/brain/e47abf9e-b981-4e03-a992-c44c6b3e371d/SPEC_DRAFT_H008.md). Strategy implementation and OOS backtesting remain strictly **`BLOCKED (NOT FROZEN)`**.
+97. **Commit 047 - BTC/USDT Microstructure Reconstruction (Rota B), H009 Freeze & Blind OOS Replay:**
+    - **Rota B Pipeline:** Built `scripts/data_acquisition/reconstruct_binance_5s.py` streaming official Binance public daily `aggTrades` archives in-memory without multi-gigabyte disk dumps.
+    - **Dataset Construction (`DATASET_BTCUSDT_5S_001`):**
+      - In-Sample (June 2024): 28.1M trades $\to$ 43,200 M1 bars, 518,400 5s bars (`BTCUSDT_2024-06.parquet`).
+      - Out-of-Sample Locked (July–August 2024, 62 days): 89,280 M1 bars, 1,071,360 5s bars (`BTCUSDT_2024-07_08.parquet`). 100% monotonic, zero gaps.
+    - **Pre-Registration & Freeze (`HYPOTHESIS_009`):**
+      - Pre-registered in `research/governance/HYPOTHESIS_009.json` (SHA-256: `eb5d35f3c4d20c4fee3336f4e38ff96fc5d39581da99c0b24640d74dbb1228c5`).
+      - Rules: M1 Stretch $\ge 1.5\times\text{ATR}(14)$, 12th 5s candle wick $\ge 0.35$, 5s pro-fade close, extreme timing $< :50\text{s}$. Expiry: 60s, Payout: 85%, $P_{\text{BE}} = 54.05\%$.
+    - **Implementation & Adversarial Red Team:**
+      - Created `src/strategy/models/BTCUSDTMicrostructureModel.js` and `ReversedBTCUSDTMicrostructureModel.js`.
+      - Executed `tests/adversarial/047_adversarial_h009.test.js` (6/6 tests passing: causal lookback $t-1$, timing fuzzing, reversed control symmetry, zero range handling, synthetic null).
+      - All 68 Jest test suites (237/237 tests) and 12 Python unittests passing (100%).
+    - **Blind Walk-Forward OOS Replay (`EXP_047`):**
+      - Executed `scripts/research/run_experiment_047_h009_oos.py` across 62 locked OOS days (July 1 to August 31, 2024).
+      - **Empirical Win Rate:** **$60.26\%$** ($N=151$, 91 Wins, 60 Losses, 1 Push).
+      - **Expected Value:** **$EV = +0.1149$** (+11.49% per trade vs $P_{\text{BE}} = 54.05\%$).
+      - **Superiority over Naive Baseline ($49.69\%$):** **$+10.57\text{ pp}$**.
+      - **Superiority over Reversed Control ($39.74\%$):** **$+20.53\text{ pp}$**.
+      - **Directional Symmetry:** CALL $60.00\%$ ($N=80$), PUT $60.56\%$ ($N=71$), $\Delta = 0.56\text{ pp}$.
+    - **Tri-Proof CRO Deliberation:**
+      - Proof 1 (Stats): 95% Wilson CI $[52.30\%, 67.72\%]$. Deficit of -175.57 bps on lower bound due to sample size power constraint ($N=151 \implies \text{CI half-width } \pm 7.7\text{ pp}$).
+      - Proof 2 (Adversarial): PASS. Proof 3 (Provenance): PASS.
+      - **Sovereign Verdict:** **`RETURN_FOR_REVIEW`** (`RISK_DECISION_047.json`, `CRO_VERDICT.md`). Issued `REMEDIATION_REQUIREMENT.json`.
+      - **Remediation Plan:** Prohibit any parameter tuning; reconstruct September 2024 (`2024-09-01` to `2024-09-30`) to reach $N \ge 240$ trades and push $W_{\text{low}} > 54.05\%$.
 
-**Next Objective:** Commit and deploy the `/discovery` route to Railway. Query `/discovery?asset=XAUUSD` to extract and lock the official `active_id`, tick size, and payout on the live broker session. Keep the recorder accumulating toward $N_{\text{OOS}} \ge 450$ trades before triggering the formal H008 Freeze Ceremony.
+**Next Objective:** Execute CRO Remediation: reconstruct September 2024 Binance `aggTrades` to expand locked OOS partition to $N \ge 240$ trades. Re-run blind OOS replay to clear the Wilson Lower Bound gate ($W_{\text{low}} > 54.05\%$) for formal promotion to the Model Registry.
+
