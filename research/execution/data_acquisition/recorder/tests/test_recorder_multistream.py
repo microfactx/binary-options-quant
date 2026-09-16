@@ -238,6 +238,57 @@ class TestEntrypointWiring(EnvCase):
         empty = ce.stream_entry("XAUUSD", 5)
         self.assertEqual(empty["stats"]["closed_candles"], 0)
 
+    def test_discovery_response(self):
+        ce = self.load()
+        import io
+        cat_file = Path(self.tmp.name) / "VENUE_CATALOG_DISCOVERY.json"
+        cat_file.write_text(json.dumps({
+            "XAUUSD": {
+                "active_id": 74,
+                "name": "front.gold",
+                "ticker": "XAUUSD",
+                "category": "turbo",
+                "precision": 2,
+                "payout_rate": 0.85
+            }
+        }), encoding="utf-8")
+
+        class MockHandler(ce.CloudRequestHandler):
+            def __init__(self, path):
+                self.path = path
+                self.wfile = io.BytesIO()
+                self.headers_sent = {}
+                self.status_code = None
+
+            def send_response(self, code, message=None):
+                self.status_code = code
+
+            def send_header(self, keyword, value):
+                self.headers_sent[keyword] = value
+
+            def end_headers(self):
+                pass
+
+        # Test querying specific asset
+        h1 = MockHandler("/discovery?asset=XAUUSD")
+        h1.handle_discovery()
+        resp1 = json.loads(h1.wfile.getvalue().decode("utf-8"))
+        self.assertEqual(resp1.get("active_id"), 74)
+        self.assertEqual(resp1.get("category"), "turbo")
+
+        # Test querying non-existent asset (fail-closed)
+        h2 = MockHandler("/discovery?asset=NONEXISTENT")
+        h2.handle_discovery()
+        resp2 = json.loads(h2.wfile.getvalue().decode("utf-8"))
+        self.assertEqual(resp2.get("status"), "UNKNOWN / FAIL-CLOSED")
+
+        # Test querying full catalog
+        h3 = MockHandler("/discovery")
+        h3.handle_discovery()
+        resp3 = json.loads(h3.wfile.getvalue().decode("utf-8"))
+        self.assertEqual(resp3.get("status"), "SUCCESS")
+        self.assertIn("XAUUSD", resp3.get("discovered_assets", {}))
+
 
 if __name__ == "__main__":
     unittest.main()

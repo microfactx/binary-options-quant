@@ -142,6 +142,8 @@ class CloudRequestHandler(BaseHTTPRequestHandler):
             self.handle_metrics()
         elif base == "/download":
             self.handle_download()
+        elif base == "/discovery":
+            self.handle_discovery()
         elif base == "/" or base == "/index.html":
             self.handle_dashboard()
         else:
@@ -209,6 +211,40 @@ class CloudRequestHandler(BaseHTTPRequestHandler):
         with raw_file.open("rb") as f:
             while chunk := f.read(64 * 1024):
                 self.wfile.write(chunk)
+
+    def handle_discovery(self):
+        qs = parse_qs(urlparse(self.path).query)
+        asset_query = (qs.get("asset") or [None])[0]
+        catalog = dict(recorder.CATALOG_CACHE)
+
+        if not catalog:
+            cat_file = RAW_DIR / "VENUE_CATALOG_DISCOVERY.json"
+            if cat_file.exists():
+                try:
+                    with cat_file.open("r", encoding="utf-8") as f:
+                        catalog = json.load(f)
+                except Exception:
+                    pass
+
+        if asset_query:
+            data = catalog.get(asset_query) or {
+                "query": asset_query,
+                "status": "UNKNOWN / FAIL-CLOSED",
+                "message": f"Asset '{asset_query}' not yet discovered or not found in venue catalog.",
+                "available_queries": list(catalog.keys())
+            }
+        else:
+            data = {
+                "status": "SUCCESS" if catalog else "PENDING_DISCOVERY",
+                "discovered_assets": catalog
+            }
+
+        payload = json.dumps(data, indent=2).encode("utf-8")
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(payload)))
+        self.end_headers()
+        self.wfile.write(payload)
 
     def handle_dashboard(self):
         uptime_h = round((time.time() - START_TIME) / 3600, 2)
@@ -310,6 +346,7 @@ class CloudRequestHandler(BaseHTTPRequestHandler):
     <div style="display:flex; justify-content: space-between; align-items: center;">
       <div>
         <a href="/metrics" class="btn btn-secondary" target="_blank">JSON Metrics</a>
+        <a href="/discovery" class="btn btn-secondary" target="_blank">Venue Discovery</a>
         <a href="/health" class="btn btn-secondary" target="_blank">Healthcheck</a>
       </div>
     </div>

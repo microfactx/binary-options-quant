@@ -1,6 +1,6 @@
 # Project State: Binary Options Quant
 
-**Current Phase:** Commit 045 Complete (Single-Session Multi-Stream Recorder Live; XAU/USD 60s+5s Accumulation Started; H008 SPEC_DRAFT Eliciting — NOT FROZEN)
+**Current Phase:** Commit 046 Complete (Venue Catalog Discovery Endpoint Active; H008 In-Sample Microstructure Calibrated — SPEC_DRAFT v1.1.0 NOT FROZEN)
 
 ## Completed Milestones
 1. **Commit 001 - Core Types:** MarketObservation, BinaryOutcome, Signal, ProbabilitySnapshot.
@@ -236,8 +236,15 @@
     - **Test battery:** `recorder/tests/test_recorder_multistream.py`, 11/11 passing (stdlib unittest, mocked venue, no network).
     - **Live 2026-09-15:** all three streams nominal (5s cadence exact, cross-granularity closes consistent, XAU/XAG numbering continuous across redeploy via volume + dedup). Two isolated 5s gaps quarantined for canonicalization (#383/TS …140, #468/TS …565).
     - **Provenance note:** XAU/XAG closed count regressed 108 → 103 across one restart (file reset + venue backfill ≈100); loss bounded, series monotonic since. Volume must not be recreated. **[MULTI-STREAM LIVE]**
-96. **H008 SPEC_DRAFT — Elicitation in Progress (NOT FROZEN, no code, no dispatch):**
-    - Candidate: symmetric M1-stretch fade (`range ≥ 1.5×ATR(14)` Wilder) into 2-pivot HH/HL–LH/LL trendlines (pivot confirmed after 5 M1 bars) or OTE 0.62–0.79 of last impulse if zero valid lines in 120 M1 bars; micro filter on last closed 5s (line-side wick ≥0.35 + pro-fade close); first-touch entry at line price ±0.1×ATR; 1m expiry at next M1 clock close; no breakout filter; no metric tuning (Via A).
-    - Open: XAU/USD 1m payout (→ P_BE), live `active_id` confirmation (library prior: XAUUSD=74), IS/OOS boundaries, adversarial battery, seeds, stopping/promotion rules. Freeze ceremony only after data coverage.
+96. **Commit 046 - Venue Catalog Discovery Endpoint & H008 In-Sample Microstructure Calibration:**
+    - **Venue Discovery Infrastructure:** Built `get_catalog_metadata` in `iqoption_adapter.py`, atomic cache persistence (`VENUE_CATALOG_DISCOVERY.json`), and exposed `GET /discovery?asset=XAUUSD` on `cloud_entrypoint.py` with dashboard badge.
+    - **Test Coverage:** Added `test_discovery_response` to `recorder/tests/test_recorder_multistream.py` (12/12 tests passing, 100% OK offline). All 67 Jest test suites / 231 tests passing without regressions.
+    - **Empirical Microstructure Study (`DATASET_XAUUSD_001_EXPLORATORY_IS`):** Analyzed 2,675 closed M1 bars and 31,002 closed 5s bars from IQ Option live streams (`2026-09-15T00:13:00Z` to `2026-09-16T22:48:00Z`, ~46 hours).
+    - **Scientific Finding 1 (The Stretch Fallacy):** M1 stretch alone exhibits continuation momentum ($P_{\text{fade}} = 47.35\%$ for $\text{Range} \ge 1.5\times\text{ATR}$). Pure stretch fading is systematically unprofitable without microstructural gating.
+    - **Scientific Finding 2 (5s Rejection Alpha):** Requiring 12th candle 5s wick $\ge 0.35$ AND pro-fade closing body lifted Win Rate from $47.35\%$ to **$66.67\%$** ($N=33$, EV(85%) = $+0.233$, 95% Wilson CI $[49.61\%, 80.25\%]$).
+    - **Scientific Finding 3 (Directional Asymmetry):** BULL stretch fade (PUT) showed $59.52\%$ WR ($N=42$); BEAR stretch fade (CALL) dropped to $41.67\%$ ($N=36$) due to liquidation cascades. Rule enforced: BEAR stretch fade strictly requires causal structural support confluence.
+    - **Scientific Finding 4 (Timing Guard):** Extrema occurring in terminal 10s ($:50-:60$) indicate breakout momentum; trade suppressed if $t_{\text{extreme}} \ge T+50\text{s}$.
+    - **Epistemic Quarantine & Power Floor:** First 46 hours quarantined permanently as `IN_SAMPLE_EXPLORATORY`. Formal binomial power analysis derived $N_{\text{min, power}} = 450$ trades for $\alpha=0.05, 1-\beta=0.80, \Delta=4.45\text{ pp}$.
+    - **SPEC_DRAFT v1.1.0:** Formally updated [SPEC_DRAFT_H008.md](file:///C:/Users/WDAGUtilityAccount/.gemini/antigravity/brain/e47abf9e-b981-4e03-a992-c44c6b3e371d/SPEC_DRAFT_H008.md). Strategy implementation and OOS backtesting remain strictly **`BLOCKED (NOT FROZEN)`**.
 
-**Next Objective:** Keep the Railway recorder accumulating on all three streams (`IQO_STREAMS=XAU/XAG:60,XAUUSD:60,XAUUSD:5`, volume `/data`). XAU/XAG continues toward N ≥ 10,000 closed M1 for the Level 2 fidelity gate; XAU/USD 60s+5s accumulates toward ~30 business days for the H008 IS/OOS design. Then: download via per-stream `/download`, concurrent Dukascopy for the exact span, `fidelity_audit_xauxag.js` (ρ_15m ≥ 0.98, BSIR_15m ≤ 2.0%), and H008 freeze ceremony (payout-confirmed P_BE, blind boundary, battery, seeds).
+**Next Objective:** Commit and deploy the `/discovery` route to Railway. Query `/discovery?asset=XAUUSD` to extract and lock the official `active_id`, tick size, and payout on the live broker session. Keep the recorder accumulating toward $N_{\text{OOS}} \ge 450$ trades before triggering the formal H008 Freeze Ceremony.

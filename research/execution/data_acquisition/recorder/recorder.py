@@ -83,6 +83,9 @@ CANDLE_POLL_INTERVAL = 0.5  # seconds
 EMPTY_POLL_PATIENCE = 60    # seconds of empty polls before reconnecting
 GET_CANDLES_ERROR_PATIENCE = 30  # seconds of continuous errors before reconnecting
 
+# Shared catalog discovery cache
+CATALOG_CACHE = {}
+
 
 def log(msg):
     ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -357,6 +360,20 @@ def main():
 
         log("Connection successful. Practice mode asserted.")
         reconnect_attempt = 0  # Reset on successful connection
+
+        # Probe catalog for configured streams to avoid unverified assumptions
+        stream_assets = list(dict.fromkeys([s["asset"] for s in states] + ["XAU/XAG", "XAUUSD"]))
+        try:
+            if hasattr(adapter, "get_catalog_metadata"):
+                meta = adapter.get_catalog_metadata(stream_assets)
+                if isinstance(meta, dict):
+                    CATALOG_CACHE.update(meta)
+                    cat_file = RAW_DIR / "VENUE_CATALOG_DISCOVERY.json"
+                    with cat_file.open("w", encoding="utf-8") as cf:
+                        json.dump(CATALOG_CACHE, cf, indent=2)
+                    log(f"Venue catalog discovery updated for: {list(CATALOG_CACHE.keys())}")
+        except Exception as e:
+            log(f"Venue catalog discovery non-fatal warning: {e}")
 
         all_finished = run_sessions(adapter, states)
 
