@@ -44,17 +44,46 @@ async function processStream(label, cfg) {
   const lines = await readLines(cfg.rawFile);
   console.log('  [READ] ' + lines.length + ' raw lines');
 
-  const parsed = lines.map(function(l) {
-    const p = JSON.parse(l).raw_payload;
-    return { ts: p.from, open: p.open, high: p.max, low: p.min, close: p.close, volume: p.volume };
+  const closedRecords = [];
+  for (const l of lines) {
+    try {
+      const obj = JSON.parse(l);
+      if (obj.candle_status !== 'CLOSED') continue;
+      const p = obj.raw_payload;
+      if (!p || p.from === undefined) continue;
+      closedRecords.push({
+        ts: p.from,
+        open: Number(p.open),
+        high: Number(p.max !== undefined ? p.max : p.high),
+        low: Number(p.min !== undefined ? p.min : p.low),
+        close: Number(p.close),
+        volume: Number(p.volume || 0),
+        local_ts: obj.local_timestamp || 0
+      });
+    } catch (e) {}
+  }
+  console.log('  [FILTER] Filtered ' + closedRecords.length + ' CLOSED records from ' + lines.length + ' raw lines');
+
+  // Sort by ts ascending, then local_ts ascending (latest emission last)
+  closedRecords.sort(function(a, b) {
+    if (a.ts !== b.ts) return a.ts - b.ts;
+    return a.local_ts - b.local_ts;
   });
-  parsed.sort(function(a, b) { return a.ts - b.ts; });
 
   const dedupMap = new Map();
-  for (const r of parsed) { if (!dedupMap.has(r.ts)) dedupMap.set(r.ts, r); }
+  for (const r of closedRecords) {
+    dedupMap.set(r.ts, {
+      ts: r.ts,
+      open: r.open,
+      high: r.high,
+      low: r.low,
+      close: r.close,
+      volume: r.volume
+    });
+  }
   const deduped = Array.from(dedupMap.values());
-  const dupCount = parsed.length - deduped.length;
-  console.log('  [DEDUP] ' + parsed.length + ' -> ' + deduped.length + ' (removed ' + dupCount + ' dups)');
+  const dupCount = closedRecords.length - deduped.length;
+  console.log('  [DEDUP] ' + closedRecords.length + ' -> ' + deduped.length + ' (removed ' + dupCount + ' duplicate closed bars)');
 
   let badOhlc = 0, gapCount = 0;
   for (let i = 0; i < deduped.length; i++) {

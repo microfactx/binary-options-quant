@@ -9,27 +9,27 @@
     "status": "VERIFIED_CANONICAL",
     "promotionRequirement": "Level 2 Fidelity Audit (rho>=0.98 vs reference, DAR>=94%, BSIR<=2%) required before live execution.",
     "commercialUsePermitted": false,
-    "frozenAt": "2026-09-17T01:03:36.217Z"
+    "frozenAt": "2026-09-17T02:18:31.817Z"
   },
   "streams": {
     "60s": {
       "label": "60s",
       "intervalSec": 60,
       "rawLinesRead": 163880,
-      "canonicalCount": 2800,
-      "duplicatesRemoved": 161080,
+      "canonicalCount": 2799,
+      "duplicatesRemoved": 0,
       "gapsDetected": 2,
       "firstTimestamp": 1789431180,
-      "lastTimestamp": 1789606320,
+      "lastTimestamp": 1789606260,
       "firstDate": "2026-09-15T00:13:00.000Z",
-      "lastDate": "2026-09-17T00:52:00.000Z",
+      "lastDate": "2026-09-17T00:51:00.000Z",
       "monthBreakdown": {
-        "2026-09": 2800
+        "2026-09": 2799
       },
       "canonicalFile": "research/datasets/XAUUSD/canonical/IQO_XAUUSD_60s_canonical.jsonl",
       "hashes": {
-        "canonicalFileSha256": "b7cf69f230f58b72b45bbf83412e43fa92652a4342a6c4ab2539232940cfe5c9",
-        "semanticContentHash": "3031579a20eca81442659a5acde4c183304daa26fc695360b4a2e991b0b9bed7",
+        "canonicalFileSha256": "ce6d0ac475a9b348bbbf9bf0cb8f6b14bf533b09b367adda2087758a537de84a",
+        "semanticContentHash": "9d21be56a8c1335475a3ebfb1e90dedb53e2be9eec77b396cc0f7da02189c091",
         "algorithm": "SHA-256"
       }
     },
@@ -37,20 +37,20 @@
       "label": "5s",
       "intervalSec": 5,
       "rawLinesRead": 330736,
-      "canonicalCount": 32495,
-      "duplicatesRemoved": 298241,
+      "canonicalCount": 32494,
+      "duplicatesRemoved": 0,
       "gapsDetected": 2,
       "firstTimestamp": 1789436675,
-      "lastTimestamp": 1789606345,
+      "lastTimestamp": 1789606340,
       "firstDate": "2026-09-15T01:44:35.000Z",
-      "lastDate": "2026-09-17T00:52:25.000Z",
+      "lastDate": "2026-09-17T00:52:20.000Z",
       "monthBreakdown": {
-        "2026-09": 32495
+        "2026-09": 32494
       },
       "canonicalFile": "research/datasets/XAUUSD/canonical/IQO_XAUUSD_5s_canonical.jsonl",
       "hashes": {
-        "canonicalFileSha256": "9eb0d11b0aed1ab58d4db314dc24c7c60ea72ca82dc972c7d437f6024838be51",
-        "semanticContentHash": "9679cc1fe3829f99fd5711713f6ee37b2c9f45ee162c6a737db050b725d48315",
+        "canonicalFileSha256": "283efb2272148f3506444c6f4c4a8f89d5430618cce3104974f0ebc02c83b8c0",
+        "semanticContentHash": "d6fb683188cc3127587b7187499d55f475a666b70093e699f42730dec8395c8f",
         "algorithm": "SHA-256"
       }
     }
