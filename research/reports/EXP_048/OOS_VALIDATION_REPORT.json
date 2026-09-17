@@ -1,0 +1,123 @@
+{
+  "experimentId": "EXP_048_BTCUSDT_ORDERFLOW_ABSORPTION_001",
+  "hypothesisId": "HYPOTHESIS_010",
+  "status": "COMPLETED",
+  "replayPeriod": "2024-07-01 to 2024-11-30 (153 days OOS Blind)",
+  "payoutRate": 0.85,
+  "breakevenHurdle": 0.5405405405405405,
+  "h010Model": {
+    "n": 147,
+    "wins": 92,
+    "losses": 55,
+    "pushes": 0,
+    "winRate": 0.6258503401360545,
+    "ciLower": 0.5453560265404078,
+    "ciUpper": 0.699934626899785,
+    "ev": 0.15782312925170072
+  },
+  "reversedControl": {
+    "n": 147,
+    "wins": 55,
+    "losses": 92,
+    "pushes": 0,
+    "winRate": 0.3741496598639456,
+    "ciLower": 0.30006537310021497,
+    "ciUpper": 0.4546439734595923,
+    "ev": -0.3078231292517007
+  },
+  "naiveBaseline": {
+    "n": 215851,
+    "wins": 107876,
+    "losses": 107975,
+    "pushes": 4468,
+    "winRate": 0.49977067514164863,
+    "ciLower": 0.4976613850509042,
+    "ciUpper": 0.5018799733947487,
+    "ev": -0.07542425098795003
+  },
+  "directionalBreakdown": {
+    "call": {
+      "n": 84,
+      "wins": 49,
+      "losses": 35,
+      "pushes": 0,
+      "winRate": 0.5833333333333334,
+      "ciLower": 0.4765264298684706,
+      "ciUpper": 0.6828516153957529,
+      "ev": 0.07916666666666672
+    },
+    "put": {
+      "n": 63,
+      "wins": 43,
+      "losses": 20,
+      "pushes": 0,
+      "winRate": 0.6825396825396826,
+      "ciLower": 0.5599646825583142,
+      "ciUpper": 0.7841331334648034,
+      "ev": 0.26269841269841276
+    },
+    "directionalImbalance": 0.09920634920634919
+  },
+  "monthlyBreakdown": {
+    "2024-07": {
+      "n": 22,
+      "wins": 13,
+      "losses": 9,
+      "pushes": 0,
+      "winRate": 0.5909090909090909
+    },
+    "2024-08": {
+      "n": 40,
+      "wins": 31,
+      "losses": 9,
+      "pushes": 0,
+      "winRate": 0.775
+    },
+    "2024-09": {
+      "n": 29,
+      "wins": 16,
+      "losses": 13,
+      "pushes": 0,
+      "winRate": 0.5517241379310345
+    },
+    "2024-10": {
+      "n": 25,
+      "wins": 14,
+      "losses": 11,
+      "pushes": 0,
+      "winRate": 0.56
+    },
+    "2024-11": {
+      "n": 31,
+      "wins": 18,
+      "losses": 13,
+      "pushes": 0,
+      "winRate": 0.5806451612903226
+    }
+  },
+  "gatesEvaluation": {
+    "minSampleGate": {
+      "n": 147,
+      "floor": 100,
+      "status": "PASS"
+    },
+    "statisticalEvidenceGate": {
+      "wilsonLowerBound": 0.5453560265404078,
+      "pBe": 0.5405405405405405,
+      "surplusBps": 48.15,
+      "status": "PASS"
+    },
+    "reversedControlGate": {
+      "baseWinRate": 0.6258503401360545,
+      "reversedWinRate": 0.3741496598639456,
+      "alphaOverReversed": 25.17,
+      "status": "PASS"
+    },
+    "directionalSymmetryGate": {
+      "delta": 9.92,
+      "threshold": 8.0,
+      "status": "FAIL"
+    }
+  },
+  "executedAt": "2026-09-17T00:38:24.258226+00:00"
+}

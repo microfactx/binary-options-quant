@@ -1,0 +1,85 @@
+{
+  "modelId": "MODEL_H010_BTCUSDT_ORDERFLOW_ABSORPTION",
+  "version": "1.0.0",
+  "registeredAt": "2026-09-17T00:55:00.000Z",
+  "state": "03_APPROVED_CANDIDATE",
+  "hypothesis": {
+    "hypothesisId": "HYPOTHESIS_010",
+    "researchFamily": "FAMILY_05_MULTI_TIMEFRAME_EXTREMES",
+    "title": "Macro-Conditioned Order Flow Absorption & Terminal Microstructure Reversion on BTC/USDT",
+    "specSha256": "9df1b6cdfe35ff42ab8de80f61ee15cbed52592688de36b600c0192cf814121e"
+  },
+  "instrument": {
+    "asset": "BTCUSDT",
+    "venue": "BINANCE_SPOT",
+    "provider": "feed",
+    "timeframe": "1m_with_5s_micro_and_1440m_macro",
+    "expirySeconds": 60,
+    "expiryBars": 1,
+    "referencePayout": 0.85,
+    "breakevenHurdle": 0.5405405405405405
+  },
+  "implementation": {
+    "entrypoint": "src/strategy/models/OrderFlowAbsorptionModel.js",
+    "negativeControl": "src/strategy/models/ReversedOrderFlowAbsorptionModel.js",
+    "sourceCodeSha256": "247f94bd5e1f478c6af275c13e3bf5f99831f82f81d3adacd78487cff611272c",
+    "parameters": {
+      "atrPeriod": 14,
+      "stretchMultiplier": 1.5,
+      "macroPeriod": 1440,
+      "macroTolerancePct": 0.015,
+      "minWickRatio": 0.35,
+      "maxTimingSec": 50,
+      "absorptionShareThreshold": 0.45,
+      "expirySeconds": 60
+    }
+  },
+  "validationSummary": {
+    "datasetId": "DATASET_BTCUSDT_5S_001",
+    "partition": "OUT_OF_SAMPLE_BLIND_153_DAYS",
+    "sampleSizeResolved": 147,
+    "realizedWinRate": 0.625850,
+    "wilsonLowerBound95": 0.545356,
+    "wilsonUpperBound95": 0.699935,
+    "surplusBasisPoints": 48.15,
+    "expectedValuePerUnit": 0.157823,
+    "monthlyConsistency": "5_OF_5_MONTHS_PROFITABLE",
+    "directionalBreakdown": {
+      "callWinRate": 0.583333,
+      "callSample": 84,
+      "putWinRate": 0.682540,
+      "putSample": 63,
+      "deltaPercentagePoints": 9.92
+    },
+    "reversedControlWinRate": 0.374150,
+    "alphaOverReversedPp": 25.17,
+    "alphaOverBaselinePp": 12.61
+  },
+  "governanceConsensusSignatures": {
+    "chiefRiskOfficer": {
+      "verdict": "APPROVED",
+      "artifact": "research/reports/EXP_048/RISK_DECISION_048.json",
+      "statement": "Statistical evidence gate cleared. Constitutional Invariant 4 satisfied: W_low (54.54%) > P_BE (54.05%) by +48.15 bps on N=147 across 153 OOS days."
+    },
+    "chiefTechnologyOfficer": {
+      "verdict": "APPROVED",
+      "artifact": "tests/adversarial/048_adversarial_h010.test.js",
+      "statement": "Architectural determinism, zero lookahead leakage, and order flow absorption guards verified. All 69 test suites pass."
+    },
+    "experimentController": {
+      "verdict": "VERIFIED",
+      "artifact": "research/reports/EXP_048/PROVENANCE_RECEIPT_048.json",
+      "statement": "Immutable dataset and frozen code hashes cryptographically verified. Provenance intact."
+    },
+    "chiefExecutiveOfficer": {
+      "verdict": "MANDATE_AUTHORIZED",
+      "statement": "Model H010 promoted to Candidate Model Registry as primary crypto microstructure champion. Authorized for Shadow/Paper execution."
+    }
+  },
+  "deploymentGates": {
+    "currentDataTier": "LEVEL_1_RESEARCH_GRADE",
+    "promotionToPaperDemo": "AUTHORIZED",
+    "promotionToLiveProduction": "BLOCKED_PENDING_BROKER_EXECUTION_FIDELITY",
+    "liveGatePrerequisite": "Bridge to live IQ Option BTC/USD or Binance Options execution, verifying latency budget < 250ms and zero quote slippage."
+  }
+}

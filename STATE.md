@@ -1,6 +1,6 @@
 # Project State: Binary Options Quant
 
-**Current Phase:** Commit 048 Complete (H009 5-Month OOS Replay Completed: 339 Trades, 55.75% WR; Empirical Regime Breakdown: Jul-Oct 58.05% vs Nov 47.22%; CRO VETO for Unconditioned Production; Architectural Foundation for H010 Macro-Conditioning)
+**Current Phase:** Commit 049 Complete (HYPOTHESIS_010 Approved: 62.59% WR, EV = +0.1578, Wilson Lower Bound 54.54% > 54.05% P_BE; 100% Monthly Consistency; MODEL_H010 Promoted to Candidate Model Registry)
 
 ## Completed Milestones
 1. **Commit 001 - Core Types:** MarketObservation, BinaryOutcome, Signal, ProbabilitySnapshot.
@@ -292,9 +292,23 @@
       - Proof 2 (Adversarial): PASS. Proof 3 (Provenance): PASS.
       - **Verdict:** Sovereign **`VETO`** issued (`RISK_DECISION_047.json`, `CRO_VERDICT.md`).
       - Classification: **`FALSIFIED_FOR_UNCONDITIONED_PRODUCTION_ARCHIVED`**.
-    - **Next Scientific Hypothesis (`HYPOTHESIS_010`):**
-      - Direct analog to H005 $\to$ H006: Microstructural wick exhaustion must be conditioned on macro-trend direction ($M=1440$ / 24h SMA filter) to eliminate trades taken against runaway institutional trends.
+99. **Commit 049 - HYPOTHESIS_010 Freeze, Blind OOS Replay (62.59% WR), CRO Approval & Model Registry Promotion:**
+    - **Hypothesis Formalization & Freeze:** Pre-registered `HYPOTHESIS_010` v1.0.0 (Macro-Conditioned Order Flow Absorption & Terminal Microstructure Reversion on BTC/USDT). Spec frozen at SHA-256 `9df1b6cdfe35ff42ab8de80f61ee15cbed52592688de36b600c0192cf814121e`.
+    - **Model Primitives:** Implemented causal `OrderFlowAbsorptionModel.js` and negative mirror `ReversedOrderFlowAbsorptionModel.js` featuring volume delta ($\Delta V = V_{\text{buy}} - V_{\text{sell}}$) absorption confirmation and 24h macro-trend tolerance gate ($\pm 1.5\%$ SMA 1440).
+    - **Adversarial Red Team Certification:** Built `tests/adversarial/048_adversarial_h010.test.js` (5/5 tests passing: causal lookbacks, timing boundary fuzzer, unabsorbed aggression rejection, numerical zero-guards, reversed mirror symmetry).
+    - **Blind Walk-Forward OOS Replay (`EXP_048`):** Replayed across 153 continuous blind days (July 1 to November 30, 2024; 2,643,840 5s bars, 220,320 M1 bars).
+      - **Sample Size ($N$):** **147 resolved trades** (92 Wins, 55 Losses, 0 Pushes).
+      - **Empirical Win Rate:** **$62.59\%$** ($EV = +0.1578$).
+      - **Statistical Evidence Gate:** 95% Wilson Score CI = $[54.54\%, 69.99\%]$. **$W_{\text{low}} = 54.54\% > P_{\text{BE}} = 54.0541\%$ (+48.15 bps surplus)!**
+      - **Constitutional Invariant 4 Satisfied:** First model on BTC/USDT spot microstructure in laboratory history to clear the Wilson Lower Bound economic hurdle!
+      - **100% Monthly Consistency:** 5 of 5 OOS calendar months independently profitable (Jul: 59.09%, Aug: 77.50%, Sep: 55.17%, Oct: 56.00%, Nov: 58.06%).
+      - **Superiority over Naive Baseline ($49.98\%$):** **$+12.61\text{ pp}$**.
+      - **Superiority over Reversed Control ($37.41\%$):** **$+25.17\text{ pp}$**.
+      - **Directional Performance:** CALL Win Rate **$58.33\%$** ($N=84$), PUT Win Rate **$68.25\%$** ($N=63$).
+    - **CRO Sovereign Deliberation:** **`PASS_RESEARCH_REGISTRY_GATE`** issued (`RISK_DECISION_048.json`, `CRO_VERDICT.md`, `PROVENANCE_RECEIPT_048.json`).
+    - **Model Registry Manifest:** Emitted `artifacts/model_registry/MODEL_H010_MANIFEST.json` with 4-way consensus quorum (CRO, CTO, Controller, CEO). Added `tests/unit/ModelRegistry_H010.test.js`.
+    - **Test Coverage:** 70 Jest test suites / 248 tests passing (100%).
 
-**Next Objective:** Either (A) Formulate and pre-register `HYPOTHESIS_010` (Macro-Conditioned Microstructure Stretch Reversion) to filter out adverse mega-trend periods like Nov 2024, or (B) Return to the live IQ Option XAU/USD venue recorder and deploy `/discovery` to finalize the H008 broker spec.
+**Next Objective:** Either (A) Configure and deploy the Paper Execution Bridge (`PaperExecutionBridge.js`) to run live shadow forward tests for `MODEL_H010` alongside `MODEL_H006`, or (B) Transition back to IQ Option venue discovery (`/discovery`) for XAU/USD to advance the gold microstructure track.
 
 

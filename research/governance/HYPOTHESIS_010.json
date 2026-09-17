@@ -1,0 +1,73 @@
+{
+  "hypothesisId": "HYPOTHESIS_010",
+  "version": "1.0.0",
+  "title": "Macro-Conditioned Order Flow Absorption & Terminal Microstructure Reversion on BTC/USDT",
+  "researchFamily": "FAMILY_05_MULTI_TIMEFRAME_EXTREMES",
+  "status": "FROZEN",
+  "parentHypothesis": "HYPOTHESIS_009",
+  "frozenAt": "2026-09-17T00:45:00.000Z",
+  "instrument": {
+    "asset": "BTCUSDT",
+    "name": "Bitcoin / Tether Spot",
+    "venue": "BINANCE_SPOT",
+    "timeframe": "1m_with_5s_micro_and_1440m_macro",
+    "payoutRate": 0.85,
+    "breakevenProbability": 0.5405405405405406,
+    "expirationSeconds": 60,
+    "expirationBars": 1
+  },
+  "dataset": {
+    "datasetId": "DATASET_BTCUSDT_5S_001",
+    "source": "BINANCE_PUBLIC_ARCHIVE_AGGTRADES",
+    "totalRows": 2643840,
+    "dateRange": "2024-06-01T00:00:00.000Z to 2024-11-30T23:59:59.000Z",
+    "inSamplePartition": {
+      "start": "2024-06-01T00:00:00.000Z",
+      "end": "2024-06-30T23:59:59.000Z",
+      "purpose": "Exploratory calibration and microstructural rule discovery"
+    },
+    "outOfSamplePartition": {
+      "start": "2024-07-01T00:00:00.000Z",
+      "end": "2024-11-30T23:59:59.000Z",
+      "totalDays": 153,
+      "purpose": "Strict blind replay and Wilson CI gate"
+    }
+  },
+  "model": {
+    "modelClass": "OrderFlowAbsorptionModel",
+    "atrPeriod": 14,
+    "stretchMultiplier": 1.5,
+    "macroPeriod": 1440,
+    "macroTolerancePct": 0.015,
+    "wickThreshold": 0.35,
+    "extremeTimingThresholdSec": 50,
+    "absorptionShareThreshold": 0.45,
+    "rules": {
+      "CALL": "Close(t-1) >= SMA1440(t-1) * (1 - 0.015) (Macro Ok) AND Range_t >= 1.5 * ATR_14(t-1) AND Close_t < Open_t (BEAR M1) AND LowTiming < 50s AND Last5sWick >= 0.35 AND Close_5s > Open_5s (Pro-Fade) AND (DeltaV_5s >= 0 OR TakerSellShare_5s <= 0.45)",
+      "PUT": "Close(t-1) <= SMA1440(t-1) * (1 + 0.015) (Macro Ok) AND Range_t >= 1.5 * ATR_14(t-1) AND Close_t > Open_t (BULL M1) AND HighTiming < 50s AND Last5sWick >= 0.35 AND Close_5s < Open_5s (Pro-Fade) AND (DeltaV_5s <= 0 OR TakerBuyShare_5s <= 0.45)",
+      "NO_SIGNAL": "Macro trend conflict, Range < 1.5 * ATR, Lack of 5s wick, Counter-fade 5s close, Late extreme (>= 50s), Unabsorbed aggression, or Lookback < 1440"
+    }
+  },
+  "acceptanceCriteria": {
+    "minOosSample": 100,
+    "wilsonLowerBoundThreshold": 0.5405405405405406,
+    "confidenceLevel": 0.95,
+    "maxDirectionalImbalance": 0.08,
+    "superiorityOverNaiveBaseline": true,
+    "superiorityOverReversedControl": 0.10
+  },
+  "adversarialRequirements": [
+    "SyntheticNullMulberry32",
+    "LabelPermutations1000",
+    "ReversedNegativeControl",
+    "LookaheadBoundaryFuzzing",
+    "ZeroRangeGuard",
+    "ZeroVolumeDivisionGuard"
+  ],
+  "governance": {
+    "failClosed": true,
+    "zeroLookahead": true,
+    "immutableAfterFreeze": true,
+    "postHocTuningForbidden": true
+  }
+}

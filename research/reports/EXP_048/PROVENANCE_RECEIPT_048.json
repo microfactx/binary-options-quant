@@ -1,0 +1,57 @@
+{
+  "receiptId": "PROVENANCE_EXP_048_001",
+  "experimentId": "EXP_048_BTCUSDT_ORDERFLOW_ABSORPTION_001",
+  "hypothesisId": "HYPOTHESIS_010",
+  "issuedBy": "EXPERIMENT_CONTROLLER",
+  "timestamp": "2026-09-17T00:50:30Z",
+  "specSha256": "9df1b6cdfe35ff42ab8de80f61ee15cbed52592688de36b600c0192cf814121e",
+  "datasetPartitions": {
+    "inSample": {
+      "file5s": "research/datasets/BTCUSDT/reconstructed_5s/BTCUSDT_5s_2024-06-01_to_2024-06-30.jsonl",
+      "file60s": "research/datasets/BTCUSDT/reconstructed_5s/BTCUSDT_60s_2024-06-01_to_2024-06-30.jsonl",
+      "rows5s": 518400,
+      "rowsM1": 43200,
+      "purpose": "Calibration & order flow feature definition"
+    },
+    "outOfSample": [
+      {
+        "file5s": "research/datasets/BTCUSDT/reconstructed_5s/BTCUSDT_5s_2024-07-01_to_2024-08-31.jsonl",
+        "file60s": "research/datasets/BTCUSDT/reconstructed_5s/BTCUSDT_60s_2024-07-01_to_2024-08-31.jsonl",
+        "rows5s": 1071360,
+        "rowsM1": 89280,
+        "period": "2024-07-01 to 2024-08-31"
+      },
+      {
+        "file5s": "research/datasets/BTCUSDT/reconstructed_5s/BTCUSDT_5s_2024-09-01_to_2024-09-30.jsonl",
+        "file60s": "research/datasets/BTCUSDT/reconstructed_5s/BTCUSDT_60s_2024-09-01_to_2024-09-30.jsonl",
+        "rows5s": 518400,
+        "rowsM1": 43200,
+        "period": "2024-09-01 to 2024-09-30"
+      },
+      {
+        "file5s": "research/datasets/BTCUSDT/reconstructed_5s/BTCUSDT_5s_2024-10-01_to_2024-11-30.jsonl",
+        "file60s": "research/datasets/BTCUSDT/reconstructed_5s/BTCUSDT_60s_2024-10-01_to_2024-11-30.jsonl",
+        "rows5s": 1054080,
+        "rowsM1": 87840,
+        "period": "2024-10-01 to 2024-11-30"
+      }
+    ]
+  },
+  "totalOosCandles": {
+    "rows5s": 2643840,
+    "rowsM1": 220320,
+    "calendarDays": 153
+  },
+  "implementationFiles": [
+    "src/strategy/models/OrderFlowAbsorptionModel.js",
+    "src/strategy/models/ReversedOrderFlowAbsorptionModel.js",
+    "tests/adversarial/048_adversarial_h010.test.js",
+    "scripts/research/run_experiment_048_h010_oos.py"
+  ],
+  "validationIntegrity": {
+    "adversarialPassed": true,
+    "zeroFutureLookahead": true,
+    "immutableHistoricalPartition": true,
+    "wilsonLowerBoundExceedsBreakeven": true
+  }
+}

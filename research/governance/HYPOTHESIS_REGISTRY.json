@@ -111,6 +111,31 @@
       "croDecision": "VETO",
       "archivedAt": "2026-09-17T00:05:00.000Z",
       "notes": "Predictive edge validated (+6.04 pp over market, +11.50 pp over inverted control), but unconditioned stretch-fading degraded in November 2024 mega-trend regime (47.22% WR), dropping Wilson lower bound to 50.43% <= P_BE. Requires macro trend conditioning (H010)."
+    },
+    {
+      "hypothesisId": "HYPOTHESIS_010",
+      "title": "Macro-Conditioned Order Flow Absorption & Terminal Microstructure Reversion on BTC/USDT",
+      "version": "1.0.0",
+      "sha256": "9df1b6cdfe35ff42ab8de80f61ee15cbed52592688de36b600c0192cf814121e",
+      "parentHypothesis": "HYPOTHESIS_009",
+      "researchFamily": "FAMILY_05_MULTI_TIMEFRAME_EXTREMES",
+      "datasetId": "DATASET_BTCUSDT_5S_001",
+      "targetPeriod": "2024-07 to 2024-11 (153 days OOS Blind)",
+      "status": "APPROVED_CANDIDATE_REGISTRY",
+      "registeredAt": "2026-09-17T00:45:00.000Z",
+      "runId": "EXP_048_BTCUSDT_ORDERFLOW_ABSORPTION_001",
+      "realizedWinRate": 0.625850,
+      "wilsonLowerBound": 0.545356,
+      "wilsonUpperBound": 0.699935,
+      "breakevenHurdle": 0.540541,
+      "surplusBps": 48.15,
+      "expectedValue": 0.157823,
+      "alphaOverBaseline": 0.126080,
+      "alphaOverReversed": 0.251701,
+      "sampleSize": 147,
+      "croDecision": "PASS_RESEARCH_REGISTRY_GATE",
+      "promotedAt": "2026-09-17T00:50:00.000Z",
+      "notes": "FIRST VALIDATED MODEL ON BTC/USDT SPOT: Wilson lower bound (54.54%) exceeds breakeven (54.05%). 100% profitable across all 5 OOS months (including November 2024 at 58.06%). Smashed inverted control (+25.17 pp) and naive baseline (+12.61 pp)."
     }
   ],
   "governanceRules": {

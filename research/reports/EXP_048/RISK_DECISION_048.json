@@ -1,0 +1,26 @@
+{
+  "experimentId": "EXP_048_BTCUSDT_ORDERFLOW_ABSORPTION_001",
+  "hypothesisId": "HYPOTHESIS_010",
+  "verdict": "PASS",
+  "decisionType": "PASS_RESEARCH_REGISTRY_GATE",
+  "reasonCode": "WILSON_LOWER_BOUND_EXCEEDS_BREAK_EVEN",
+  "metrics": {
+    "sampleSize": 147,
+    "empiricalWinRate": 0.6258503401360545,
+    "wilsonLowerBound": 0.5453560265404078,
+    "wilsonUpperBound": 0.699934626899785,
+    "breakevenHurdle": 0.5405405405405405,
+    "surplusBps": 48.15,
+    "expectedValue": 0.15782312925170072,
+    "alphaOverBaseline": 0.12607966499440588,
+    "alphaOverReversed": 0.25170068027210885,
+    "monthlyConsistency": "5_OF_5_MONTHS_PROFITABLE"
+  },
+  "triProofAudit": {
+    "proof1_stats": "PASS",
+    "proof2_adversarial": "PASS",
+    "proof3_provenance": "PASS"
+  },
+  "status": "PROMOTED_TO_CANDIDATE_REGISTRY",
+  "croSignature": "CRO_SOVEREIGN_VERIFIED_2026-09-17T00:50:00Z"
+}
