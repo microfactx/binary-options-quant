@@ -12,7 +12,12 @@ describe('Model Registry Governance: MODEL_H010 Manifest Audit', () => {
     const content = fs.readFileSync(manifestPath, 'utf-8');
     const parsed = JSON.parse(content);
     expect(parsed.modelId).toBe('MODEL_H010_BTCUSDT_ORDERFLOW_ABSORPTION');
-    expect(parsed.state).toBe('03_APPROVED_CANDIDATE');
+    // Governed promotion 0e7fc82: 03_APPROVED_CANDIDATE -> 04_PAPER/DEMO (paperDeployment authorized, live still BLOCKED).
+    expect(parsed.state).toBe('04_PAPER/DEMO');
+    expect(parsed.paperDeployment).toBeDefined();
+    expect(parsed.paperDeployment.specId).toBe('SPEC_PAPER_H010');
+    expect(parsed.paperDeployment.venue).toBe('BINANCE_SPOT');
+    expect(parsed.paperDeployment.bridgeConfig).toEqual({ maxLatencyMs: 250, payoutRate: 0.85, defaultStake: 1.0 });
   });
 
   test('verifies implementation source code SHA-256 integrity', () => {

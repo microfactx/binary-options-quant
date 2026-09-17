@@ -1,0 +1,46 @@
+{
+  "specId": "SPEC_PAPER_H010",
+  "version": "1.1.0",
+  "state": "FROZEN",
+  "frozenAt": "2026-09-17T00:00:00.000Z",
+  "freezeApprovedBy": "user: FREEZE APROVADO v1.1.0",
+  "parentSpec": "SPEC_PAPER_H010_v1.0.0 SHA256 CABB576F30E4AB994E216064F0915EE6CA43AA5231F7EF1C0DEC71AEFC2F9C71",
+  "intent": "Paper supervisor wrapper + authorized start for MODEL_H010. Fixed stake 1.0. No Kelly. Executor frozen untouched.",
+  "dimensions": {
+    "1_hypothesis": "HYPOTHESIS_010 v1.0.0 Macro-Conditioned Order Flow Absorption & Terminal Microstructure Reversion. specSha256=9df1b6cdfe35ff42ab8de80f61ee15cbed52592688de36b600c0192cf814121e",
+    "2_assetUniverse": "BTCUSDT, venue=BINANCE_SPOT, provider=feed. Venue switch to IQ Option prohibited (Replication Laundering).",
+    "3_timeframe": "1m_with_5s_micro_and_1440m_macro",
+    "4_entryDefinition": "CALL = Close(t-1)>=SMA1440(t-1)*(1-0.015) AND Range>=1.5*ATR14(t-1) AND Close_t<Open_t AND LowTiming<50s AND Last5sWick>=0.35 AND Close_5s>Open_5s AND (DeltaV>=0 OR SellShare<=0.45); PUT mirror; else NO_SIGNAL. Predict BEFORE Update.",
+    "5_outcomeExpiry": "60s / 1 bar, settle at next M1 close. PUSH if exit==entry.",
+    "6_estimand": "P_win = P(WIN|resolved, non-PUSH). PUSH excluded.",
+    "7_costsSizing": "payoutRate=0.85, P_BE=0.5405405405405406, defaultStake=1.0 fixed unit, immediate paper fill at close, zero spread/slippage assumed, Zero Logic Inversion. Kelly/Martingale prohibited.",
+    "8_isOosBoundaries": "IS historical DATASET_BTCUSDT_5S_001 through 2024-11-30. Forward = live from deploy timestamp onward, never seen. Pre-warm >=1440 canonical M1 bars, no dispatch during warm-up. Wrapper blocks processCandle until preWarm>=1440 AND macroSMA!==null; early dispatch = freeze violation.",
+    "9_blindEvaluationBoundary": "Model frozen sourceSha256=247f94bd5e1f478c6af275c13e3bf5f99831f82f81d3adacd78487cff611272c. Executor frozen. No edits, no filters, no selective exclusion during forward.",
+    "10_acceptanceCriteria": "latency<250ms 100%, zero inversion, ledger append-only, disconnect freeze. Wrapper must pass fault-injection (disconnect simulated, insufficient prewarm, N=100). Wilson daily informational only. promotionToLiveProduction remains BLOCKED.",
+    "11_adversarialBattery": "Latency Budget, Disconnect Fail-Safe (>300s no M1 closed or WS down => immediate freeze + REJECTED/DISCONNECT + STATUS=FROZEN, no auto-restart without new provenance), Zero Inversion, Full Lifecycle DISPATCHED->FILLED->SETTLED, ledger immutability.",
+    "12_randomSeeds": "N/A for decisions (live causal feed). tradeId=crypto.randomBytes IDs only, no statistical influence.",
+    "13_stoppingRules": "30 calendar days OR 100 settled (WIN+LOSS ex-PUSH), whichever first. Graceful stop + STATUS=FINAL, zero new dispatches. Wrapper counts settled via ledger. Immediate freeze on disconnect>300s, exception, or feed anomaly.",
+    "14_promotionRejection": "Paper SUCCESS does not promote to live. Live requires new Tri-Proof CRO + broker fidelity + 4-way quorum + new SPEC. Degradation -> RETIRED. Start authorized ONLY under v1.1.0 frozen + provenance.",
+    "15_requiredArtifacts": "scripts/execution/paper_supervisor_h010.js (new wrapper, executor untouched), research/execution/shadow_trades_h010.jsonl, research/reports/SHADOW_FORWARD_TEST_STATUS_H010.json with supervisor block, PROVENANCE_RECEIPT_PAPER_H010_v1.1.0.json"
+  },
+  "implementation": {
+    "executor": "scripts/execution/live_shadow_executor_h010.js (frozen, defaultStake 1.0)",
+    "supervisor": "scripts/execution/paper_supervisor_h010.js (new, separate process, no executor edit)",
+    "model": "src/strategy/models/OrderFlowAbsorptionModel.js",
+    "bridge": "src/execution/PaperExecutionBridge.js",
+    "ledger": "src/execution/TradeLedger.js",
+    "bridgeConfig": { "maxLatencyMs": 250, "payoutRate": 0.85, "defaultStake": 1.0 }
+  },
+  "supervisorSpec": {
+    "prewarmGate": "block processCandle until preWarmCount>=1440 AND model.currentMacroSma!==null",
+    "disconnectTimer": ">300s without M1 closed or WS down => freeze, ledger REJECTED, STATUS=FROZEN, no auto-restart",
+    "enforcer": "stop at 30d OR 100 settled WIN+LOSS ex-PUSH => graceful stop, STATUS=FINAL"
+  },
+  "feed": "Binance Spot WebSocket live BTCUSDT M1 closed + aggTrades reconstructed 5s micro-bars (Rota B logic), BINANCE_SPOT only",
+  "governance": {
+    "failClosed": true,
+    "zeroLookahead": true,
+    "immutableAfterFreeze": true,
+    "postHocTuningForbidden": true
+  }
+}

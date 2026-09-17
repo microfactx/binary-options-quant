@@ -1,0 +1,314 @@
+{
+  "receiptId": "PROVENANCE_RECEIPT_PAPER_H010_v1.1.0",
+  "modelId": "MODEL_H010_BTCUSDT_ORDERFLOW_ABSORPTION",
+  "modelVersion": "1.0.0",
+  "hypothesisId": "HYPOTHESIS_010",
+  "hypothesisVersion": "1.0.0",
+  "specId": "SPEC_PAPER_H010",
+  "specVersion": "1.1.0",
+  "issuedBy": "EXPERIMENT_CONTROLLER",
+  "roster": "10_experiment_controller.md",
+  "skills": ["quant-experiment-orchestration", "quant-model-registry-governance"],
+  "timestamp": "2026-09-17T06:23:00.569Z",
+  "deployTimestamp": "2026-09-17T06:23:00.569Z",
+  "transition": {
+    "from": "04_PAPER/DEMO (v1.0.0 paperDeployment)",
+    "to": "04_PAPER/DEMO (v1.1.0 supervisor upgrade proposal)",
+    "authorized": false,
+    "verdict": "BLOCKED"
+  },
+  "verdict": "BLOCKED",
+  "failClosed": true,
+  "blockReason": "FROZEN_ARTIFACT_NOT_COMMITTED: research/governance/SPEC_PAPER_H010_v1.1.0.json is UNTRACKED (never committed, git log empty for path). Supervisor scripts/execution/paper_supervisor_h010.js EXISTS but UNTRACKED (sha 49CA56D3..., appeared mid-lock; concurrent untracked tests/unit/PaperSupervisor_H010.test.js also present). Fail-closed: manifest left untouched at 04_PAPER/DEMO v1.0.0; v1.1.0 recorded as PROPOSAL ONLY. NOT BLOCKED_PENDING_SUPERVISOR (supervisor file present and spec-conformant on read) — blocked on git custody commit.",
+  "hashes": {
+    "specPaperFile": "research/governance/SPEC_PAPER_H010_v1.1.0.json",
+    "specPaperSha256": "9c78a451cabf20512fbac74733c5ed8e975181b88686b6eBA2EFA92DE45CEB70",
+    "specPaperSha256ComputedUpper": "9C78A451CABF20512FBAC74733C5ED8E975181B88686B6EBA2EFA92DE45CEB70",
+    "expectedSpecPaperSha256": "9C78A451CABF20512FBAC74733C5ED8E975181B88686B6EBA2EFA92DE45CEB70",
+    "specPaperHashMatch": true,
+    "specPaperState": "FROZEN",
+    "specPaperFrozenAt": "2026-09-17T00:00:00.000Z",
+    "parentSpecFile": "research/governance/SPEC_PAPER_H010_v1.0.0.json",
+    "parentSpecSha256": "cabb576f30e4ab994e216064f0915ee6ca43aa5231f7ef1c0dec71aefc2f9c71",
+    "parentSpecSha256ComputedUpper": "CABB576F30E4AB994E216064F0915EE6CA43AA5231F7EF1C0DEC71AEFC2F9C71",
+    "expectedParentSpecSha256": "CABB576F30E4AB994E216064F0915EE6CA43AA5231F7EF1C0DEC71AEFC2F9C71",
+    "parentSpecHashMatch": true,
+    "parentSpecCommit": "a5fad01d53b601648cdbdd72f34c49a32c0a7d63",
+    "parentSpecCommitSubject": "chore(custody): freeze SPEC_PAPER_H010 v1.0.0 [cabb576f30e4ab994e216064f0915ee6ca43aa5231f7ef1c0dec71aefc2f9c71] + live_shadow_executor_h010 defaultStake 1.0 + PROVENANCE_RECEIPT_PAPER_H010 custody (H010 03_APPROVED_CANDIDATE, paper deploy pending re-lock)",
+    "manifestCommit": "0e7fc8217443c3eedec127a6a6b1a77b2ed4db61",
+    "manifestCommitSubject": "chore(registry): H010 03_APPROVED_CANDIDATE -> 04_PAPER/DEMO paperDeployment [spec cabb576f][model 247f94bd][freeze a5fad01] bridge 250/0.85/1.0 BINANCE_SPOT only, live still BLOCKED",
+    "manifestState": "04_PAPER/DEMO",
+    "manifestFileSha256": "c1575512eb92aa6a0995e3578796095366ed7c31ad1d9c4ffea3b8c2a3beb69f",
+    "hypothesisFile": "research/governance/HYPOTHESIS_010.json",
+    "hypothesisFileSha256": "9df1b6cdfe35ff42ab8de80f61ee15cbed52592688de36b600c0192cf814121e",
+    "expectedSpecSha256": "9df1b6cdfe35ff42ab8de80f61ee15cbed52592688de36b600c0192cf814121e",
+    "hypothesisHashMatch": true,
+    "hypothesisStatus": "FROZEN",
+    "modelEntrypoint": "src/strategy/models/OrderFlowAbsorptionModel.js",
+    "modelSourceCodeSha256": "247f94bd5e1f478c6af275c13e3bf5f99831f82f81d3adacd78487cff611272c",
+    "expectedSourceCodeSha256": "247f94bd5e1f478c6af275c13e3bf5f99831f82f81d3adacd78487cff611272c",
+    "modelHashMatch": true,
+    "negativeControl": "src/strategy/models/ReversedOrderFlowAbsorptionModel.js",
+    "bridgeFile": "src/execution/PaperExecutionBridge.js",
+    "bridgeSha256": "7bfafb582bf59c9afeb34f8dfc950164817cdd071634ae1c1856346186697634",
+    "bridgeHashMatchVsPriorReceipt": true,
+    "ledgerFile": "src/execution/TradeLedger.js",
+    "ledgerSha256": "6fe0df1779f40c409c972ec6da98022a3c6d06267d534e798de5e70ba6293aac",
+    "ledgerHashMatchVsPriorReceipt": true,
+    "executorFile": "scripts/execution/live_shadow_executor_h010.js",
+    "executorSha256": "d0716f820a698afdbaf181b781e2d1b6c3276bceff48290f560edd8904ecbefe0",
+    "executorHashMatchVsPriorLockClose": true,
+    "executorWorkingTree": "CLEAN vs a5fad01..HEAD (no diff); tracked working tree clean",
+    "executorAuthorizedMutation": "defaultStake 10.0 -> 1.0 committed at a5fad01 (1 insertion, 1 deletion); no further edits a5fad01..HEAD for executor/model/bridge/ledger",
+    "supervisorFile": "scripts/execution/paper_supervisor_h010.js",
+    "supervisorSha256": "49ca56d3d350236a13e90b8ecd792f6394d384117b3e17aa33a0d12baeeff1e9",
+    "supervisorTracked": false,
+    "supervisorStatus": "EXISTS_UNTRACKED (absent at lock-open glob/Test-Path False; appeared mid-lock with concurrent untracked tests/unit/PaperSupervisor_H010.test.js)",
+    "supervisorSpecConformanceOnRead": "MEETS_SPEC: prewarmGate blocks processCandle until preWarmCount>=1440 AND model.currentMacroSma!==null; disconnectTimer >300s M1/WALLCLOCK gap or WS down => freeze + REJECTED/DISCONNECT + STATUS=FROZEN sticky no auto-restart; enforcer 30d OR 100 settled WIN+LOSS ex-PUSH => graceful stop STATUS=FINAL; bridgeConfig frozen {250,0.85,1.0} with throw on deviation; venue BINANCE_SPOT enforced with throw on switch; expiry 60s enforced; composition over frozen executor (no mutation); no live start on require (usage print only)"
+  },
+  "dataset": {
+    "datasetId": "DATASET_BTCUSDT_5S_001",
+    "source": "BINANCE_PUBLIC_ARCHIVE_AGGTRADES",
+    "totalRows5s": 2643840,
+    "dateRange": "2024-06-01T00:00:00.000Z to 2024-11-30T23:59:59.000Z",
+    "inSample": {
+      "start": "2024-06-01T00:00:00.000Z",
+      "end": "2024-06-30T23:59:59.000Z"
+    },
+    "outOfSample": {
+      "start": "2024-07-01T00:00:00.000Z",
+      "end": "2024-11-30T23:59:59.000Z",
+      "totalDays": 153
+    },
+    "isEnd": "2024-11-30T23:59:59.000Z",
+    "provenanceArtifact": "research/reports/EXP_048/PROVENANCE_RECEIPT_048.json"
+  },
+  "git": {
+    "commit": "0e7fc8217443c3eedec127a6a6b1a77b2ed4db61",
+    "commitSubject": "chore(registry): H010 03_APPROVED_CANDIDATE -> 04_PAPER/DEMO paperDeployment [spec cabb576f][model 247f94bd][freeze a5fad01] bridge 250/0.85/1.0 BINANCE_SPOT only, live still BLOCKED",
+    "commitDate": "2026-09-17T03:10:45-03:00",
+    "branch": "master",
+    "statusPorcelain": [
+      "?? .env.example",
+      "?? research/governance/SPEC_PAPER_H010_v1.1.0.json",
+      "?? scratch/query_iqo_catalog.py",
+      "?? scripts/execution/paper_supervisor_h010.js",
+      "?? tests/unit/PaperSupervisor_H010.test.js"
+    ],
+    "diffHeadStat": "clean (no modified tracked files)",
+    "diffA5fad01ToHeadForCustody": "clean (no diff for live_shadow_executor_h010.js, OrderFlowAbsorptionModel.js, PaperExecutionBridge.js, TradeLedger.js)",
+    "frozenArtifacts": {
+      "research/governance/HYPOTHESIS_010.json": {
+        "tracked": true,
+        "diffVsHead": "clean"
+      },
+      "artifacts/model_registry/MODEL_H010_MANIFEST.json": {
+        "tracked": true,
+        "diffVsHead": "clean",
+        "lastCommit": "0e7fc82 chore(registry): H010 03_APPROVED_CANDIDATE -> 04_PAPER/DEMO paperDeployment [spec cabb576f][model 247f94bd][freeze a5fad01] bridge 250/0.85/1.0 BINANCE_SPOT only, live still BLOCKED"
+      },
+      "src/strategy/models/OrderFlowAbsorptionModel.js": {
+        "tracked": true,
+        "diffVsHead": "clean"
+      },
+      "src/execution/PaperExecutionBridge.js": {
+        "tracked": true,
+        "diffVsHead": "clean"
+      },
+      "src/execution/TradeLedger.js": {
+        "tracked": true,
+        "diffVsHead": "clean"
+      },
+      "scripts/execution/live_shadow_executor_h010.js": {
+        "tracked": true,
+        "diffVsHead": "clean",
+        "lastCustodyCommit": "a5fad01 (authorized defaultStake 1.0 line only)"
+      },
+      "research/governance/SPEC_PAPER_H010_v1.0.0.json": {
+        "tracked": true,
+        "diffVsHead": "clean",
+        "lastCommit": "a5fad01"
+      },
+      "research/governance/SPEC_PAPER_H010_v1.1.0.json": {
+        "tracked": false,
+        "diffVsHead": "UNTRACKED_NEVER_COMMITTED",
+        "gitLog": "empty (no commit contains this path)",
+        "verdict": "FAIL"
+      },
+      "scripts/execution/paper_supervisor_h010.js": {
+        "tracked": false,
+        "diffVsHead": "UNTRACKED_APPEARED_MID_LOCK",
+        "gitLog": "empty (no commit contains this path)",
+        "verdict": "FAIL"
+      }
+    },
+    "cleanForFrozenArtifacts": false
+  },
+  "custodySurface": {
+    "files": [
+      "scripts/execution/live_shadow_executor_h010.js",
+      "src/strategy/models/OrderFlowAbsorptionModel.js",
+      "src/execution/PaperExecutionBridge.js",
+      "src/execution/TradeLedger.js",
+      "scripts/execution/paper_supervisor_h010.js"
+    ],
+    "kellyMartingaleScan": {
+      "scripts/execution/live_shadow_executor_h010.js": "NO_MATCH",
+      "src/strategy/models/OrderFlowAbsorptionModel.js": "NO_MATCH",
+      "src/execution/PaperExecutionBridge.js": "NO_MATCH",
+      "src/execution/TradeLedger.js": "NO_MATCH",
+      "scripts/execution/paper_supervisor_h010.js": "3 prohibition-only mentions (header 'Kelly prohibited', comment 'Kelly / Martingale prohibited', error 'Kelly prohibited'); NO sizing logic, fixed-stake enforcement with throw on deviation",
+      "verdict": "PASS (no Kelly/Martingale sizing implementation in custody surface)"
+    },
+    "executorDiffAuthorized": "a5fad01: defaultStake options.defaultStake || 10.0 -> options.defaultStake || 1.0 (single line); zero diffs a5fad01..HEAD across all four frozen files"
+  },
+  "venueCheck": {
+    "manifestVenue": "BINANCE_SPOT",
+    "manifestAsset": "BTCUSDT",
+    "specV110Venue": "BINANCE_SPOT",
+    "specV110Asset": "BTCUSDT",
+    "specV110Feed": "Binance Spot WebSocket live BTCUSDT M1 closed + aggTrades reconstructed 5s micro-bars (Rota B logic), BINANCE_SPOT only",
+    "executorAsset": "BTCUSDT",
+    "supervisorVenue": "BINANCE_SPOT (const VENUE enforced; constructor throws on venue switch; Replication Laundering guard)",
+    "supervisorAsset": "BTCUSDT",
+    "supervisorExpiry": 60,
+    "venueSwitchDetected": false,
+    "note": "MODEL_H010_MANIFEST.deploymentGates.liveGatePrerequisite mentions 'IQ Option BTC/USD or Binance Options' as future LIVE prerequisite text (pre-existing); paper execution path (manifest paperDeployment + spec + executor + supervisor) is BINANCE_SPOT only with no switch",
+    "verdict": "PASS"
+  },
+  "bridgeConfig": {
+    "maxLatencyMs": 250,
+    "payoutRate": 0.85,
+    "defaultStake": 1.0
+  },
+  "ledgerPath": "research/execution/shadow_trades_h010.jsonl",
+  "statusPath": "research/reports/SHADOW_FORWARD_TEST_STATUS_H010.json",
+  "ledgerPreexists": false,
+  "statusPreexists": false,
+  "deployWindow": {
+    "deployTimestamp": "2026-09-17T06:23:00.569Z",
+    "forwardStart": "2026-09-17T06:23:00.569Z (live-only from deploy onward, never seen)",
+    "isEnd": "2024-11-30T23:59:59.000Z",
+    "forwardAfterIsEnd": true,
+    "stopRule": "30 calendar days OR 100 settled (WIN+LOSS ex-PUSH), whichever first; graceful stop + STATUS=FINAL",
+    "preWarmRequirement": ">=1440 canonical M1 bars + macroSMA!==null; wrapper blocks processCandle until gate open; early dispatch = freeze violation",
+    "disconnectRule": ">300s without M1 closed or WS down => immediate freeze + REJECTED/DISCONNECT + STATUS=FROZEN, no auto-restart without new provenance"
+  },
+  "oosContaminationCheck": {
+    "isEnd": "2024-11-30T23:59:59.000Z",
+    "forwardStart": "2026-09-17T06:23:00.569Z (deploy timestamp, live-only)",
+    "forwardAfterIsEnd": true,
+    "forwardUsesLiveFeedOnly": true,
+    "ledgerPreexists": false,
+    "ledgerPath": "research/execution/shadow_trades_h010.jsonl",
+    "statusPreexists": false,
+    "statusPath": "research/reports/SHADOW_FORWARD_TEST_STATUS_H010.json",
+    "prematureForward": false,
+    "verdict": "PASS"
+  },
+  "supervisor": "scripts/execution/paper_supervisor_h010.js",
+  "gates": [
+    {
+      "gate": "SPEC_V110_HASH_FROZEN",
+      "expected": "FROZEN + 9C78A451CABF20512FBAC74733C5ED8E975181B88686B6EBA2EFA92DE45CEB70",
+      "actual": "state=FROZEN, file hash 9C78A451CABF20512FBAC74733C5ED8E975181B88686B6EBA2EFA92DE45CEB70 matches",
+      "result": "PASS"
+    },
+    {
+      "gate": "PARENT_CHAIN_COMMITTED",
+      "expected": "v1.0.0 committed at a5fad01 + manifest 04_PAPER/DEMO at 0e7fc82",
+      "actual": "v1.0.0 tracked+clean lastCommit a5fad01; manifest state 04_PAPER/DEMO lastCommit 0e7fc82=HEAD; parent hash CABB576F... matches",
+      "result": "PASS"
+    },
+    {
+      "gate": "MODEL_SOURCE_SHA",
+      "expected": "247f94bd5e1f478c6af275c13e3bf5f99831f82f81d3adacd78487cff611272c",
+      "actual": "file hash matches (case-insensitive); HYPOTHESIS_010 FROZEN + 9df1b6cd... matches",
+      "result": "PASS"
+    },
+    {
+      "gate": "CUSTODY_UNTOUCHED_EXCEPT_AUTHORIZED_STAKE",
+      "expected": "executor/model/bridge/ledger clean a5fad01..HEAD except authorized defaultStake 1.0 line at a5fad01",
+      "actual": "executor D0716F82...==prior lock-close; bridge 7BFAFB58...==prior; ledger 6FE0DF17...==prior; git diff a5fad01..HEAD clean for all four; tracked tree clean",
+      "result": "PASS"
+    },
+    {
+      "gate": "NO_KELLY_MARTINGALE_SIZING",
+      "expected": "no Kelly/Martingale sizing in custody surface",
+      "actual": "executor/model/bridge/ledger zero matches; supervisor 3 prohibition-only strings, fixed-stake throw enforcement, no sizing logic",
+      "result": "PASS"
+    },
+    {
+      "gate": "VENUE_BINANCE_SPOT_ONLY",
+      "expected": "BINANCE_SPOT only, no venue switch",
+      "actual": "manifest/spec/executor/supervisor all BTCUSDT/BINANCE_SPOT; supervisor throws on switch; no execution-path switch",
+      "result": "PASS"
+    },
+    {
+      "gate": "SUPERVISOR_COMMITTED_AND_GIT_CLEAN",
+      "expected": "supervisor exists + SPEC v1.1.0 committed, HEAD contains frozen v1.1.0",
+      "actual": "supervisor EXISTS (49CA56D3...) but UNTRACKED appeared mid-lock; SPEC v1.1.0 UNTRACKED never committed; HEAD=0e7fc82 lacks v1.1.0",
+      "result": "FAIL"
+    }
+  ],
+  "allGatesPass": false,
+  "manifestTransitionPreconditions": {
+    "predecessorState": "04_PAPER/DEMO (v1.0.0 paperDeployment, spec cabb576f, commit 0e7fc82)",
+    "successorState": "04_PAPER/DEMO (v1.1.0 supervisor upgrade)",
+    "predecessorMatch": true,
+    "allGatesPass": false,
+    "productionManifestOverwritten": false,
+    "action": "PROPOSAL_ONLY"
+  },
+  "proposedManifestPatch": {
+    "_note": "PROPOSAL ONLY — NOT APPLIED. Apply only after SPEC v1.1.0 + supervisor are committed in a freeze commit and all 7 gates re-verify PASS at new HEAD.",
+    "modelId": "MODEL_H010_BTCUSDT_ORDERFLOW_ABSORPTION",
+    "version": "1.0.0",
+    "state": {
+      "from": "04_PAPER/DEMO",
+      "to": "04_PAPER/DEMO"
+    },
+    "paperDeployment": {
+      "specId": "SPEC_PAPER_H010",
+      "specVersion": "1.1.0",
+      "specSha256": "9c78a451cabf20512fbac74733c5ed8e975181b88686b6eBA2EFA92DE45CEB70",
+      "parentSpecVersion": "1.0.0",
+      "parentSpecSha256": "cabb576f30e4ab994e216064f0915ee6ca43aa5231f7ef1c0dec71aefc2f9c71",
+      "parentFreezeCommit": "a5fad01d53b601648cdbdd72f34c49a32c0a7d63",
+      "hypothesisSpecSha256": "9df1b6cdfe35ff42ab8de80f61ee15cbed52592688de36b600c0192cf814121e",
+      "modelSourceSha256": "247f94bd5e1f478c6af275c13e3bf5f99831f82f81d3adacd78487cff611272c",
+      "supervisor": "scripts/execution/paper_supervisor_h010.js",
+      "supervisorSha256": "49ca56d3d350236a13e90b8ecd792f6394d384117b3e17aa33a0d12baeeff1e9",
+      "gitCommit": "0e7fc8217443c3eedec127a6a6b1a77b2ed4db61 (STALE — re-lock required at freeze commit containing v1.1.0 + supervisor)",
+      "deployTimestamp": "2026-09-17T06:23:00.569Z",
+      "forwardStart": "2026-09-17T06:23:00.569Z",
+      "isEnd": "2024-11-30T23:59:59.000Z",
+      "venue": "BINANCE_SPOT",
+      "asset": "BTCUSDT",
+      "bridgeConfig": {
+        "maxLatencyMs": 250,
+        "payoutRate": 0.85,
+        "defaultStake": 1.0
+      },
+      "ledgerPath": "research/execution/shadow_trades_h010.jsonl",
+      "statusPath": "research/reports/SHADOW_FORWARD_TEST_STATUS_H010.json",
+      "executor": "scripts/execution/live_shadow_executor_h010.js",
+      "provenanceReceipt": "research/reports/PROVENANCE_RECEIPT_PAPER_H010_v1.1.0.json"
+    },
+    "deploymentGates": {
+      "promotionToPaperDemo": "AUTHORIZED (v1.0.0 active; v1.1.0 upgrade pending freeze commit)",
+      "promotionToLiveProduction": "BLOCKED_PENDING_BROKER_EXECUTION_FIDELITY"
+    }
+  },
+  "remediation": [
+    "git add research/governance/SPEC_PAPER_H010_v1.1.0.json scripts/execution/paper_supervisor_h010.js tests/unit/PaperSupervisor_H010.test.js && git commit (freeze commit for v1.1.0 + supervisor) so HEAD contains frozen v1.1.0 and supervisor; then re-run this governance lock to re-verify all 7 gates PASS at new HEAD.",
+    "At daemon start, instantiate PaperSupervisorH010 (which composes LiveShadowExecutorH010 with explicit { maxLatencyMs: 250, payoutRate: 0.85, defaultStake: 1.0 }); do not rely on code defaults and do not edit frozen executor/model/bridge/ledger.",
+    "After remediation, re-verify 7/7 gates PASS, then apply proposedManifestPatch as atomic v1.0.0 -> v1.1.0 paperDeployment pointer update in artifacts/model_registry/MODEL_H010_MANIFEST.json."
+  ],
+  "observations": [
+    "Supervisor was ABSENT at lock-open (glob + Test-Path False) and APPEARED mid-lock as untracked alongside untracked tests/unit/PaperSupervisor_H010.test.js — concurrent builder activity during audit window. Content verified spec-conformant on read but custody FAIL (uncommitted). Recorded as integrity event reinforcing BLOCKED.",
+    "SPEC v1.1.0 hash 9C78A451... verified + state FROZEN; parent chain verified (v1.0.0 at a5fad01, manifest 04_PAPER/DEMO at 0e7fc82=HEAD); frozen custody clean except authorized stake line; no Kelly/Martingale sizing; venue BINANCE_SPOT only.",
+    "Manifest NOT overwritten per instruction (supervisor uncommitted + GIT_CLEAN FAIL). Left at 04_PAPER/DEMO v1.0.0; v1.1.0 upgrade is PROPOSAL ONLY in this receipt."
+  ],
+  "delegation": "NONE — fail-closed BLOCKED, no delegation to Execution or Registry."
+}
