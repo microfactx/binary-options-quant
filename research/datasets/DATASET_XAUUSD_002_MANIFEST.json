@@ -1,0 +1,64 @@
+{
+  "datasetId": "DATASET_XAUUSD_002",
+  "asset": "XAUUSD",
+  "source": "IQ_OPTION_LIVE_STREAM",
+  "sourceType": "LIVE_BROKER_STREAM_IQO",
+  "description": "IQ Option live-streamed XAU/USD candles (60s + 5s) from Railway cloud recorder. Sort+dedup+OHLC-validated.",
+  "governance": {
+    "dataTier": "LEVEL_1_RESEARCH_GRADE",
+    "status": "VERIFIED_CANONICAL",
+    "promotionRequirement": "Level 2 Fidelity Audit (rho>=0.98 vs reference, DAR>=94%, BSIR<=2%) required before live execution.",
+    "commercialUsePermitted": false,
+    "frozenAt": "2026-09-17T01:03:36.217Z"
+  },
+  "streams": {
+    "60s": {
+      "label": "60s",
+      "intervalSec": 60,
+      "rawLinesRead": 163880,
+      "canonicalCount": 2800,
+      "duplicatesRemoved": 161080,
+      "gapsDetected": 2,
+      "firstTimestamp": 1789431180,
+      "lastTimestamp": 1789606320,
+      "firstDate": "2026-09-15T00:13:00.000Z",
+      "lastDate": "2026-09-17T00:52:00.000Z",
+      "monthBreakdown": {
+        "2026-09": 2800
+      },
+      "canonicalFile": "research/datasets/XAUUSD/canonical/IQO_XAUUSD_60s_canonical.jsonl",
+      "hashes": {
+        "canonicalFileSha256": "b7cf69f230f58b72b45bbf83412e43fa92652a4342a6c4ab2539232940cfe5c9",
+        "semanticContentHash": "3031579a20eca81442659a5acde4c183304daa26fc695360b4a2e991b0b9bed7",
+        "algorithm": "SHA-256"
+      }
+    },
+    "5s": {
+      "label": "5s",
+      "intervalSec": 5,
+      "rawLinesRead": 330736,
+      "canonicalCount": 32495,
+      "duplicatesRemoved": 298241,
+      "gapsDetected": 2,
+      "firstTimestamp": 1789436675,
+      "lastTimestamp": 1789606345,
+      "firstDate": "2026-09-15T01:44:35.000Z",
+      "lastDate": "2026-09-17T00:52:25.000Z",
+      "monthBreakdown": {
+        "2026-09": 32495
+      },
+      "canonicalFile": "research/datasets/XAUUSD/canonical/IQO_XAUUSD_5s_canonical.jsonl",
+      "hashes": {
+        "canonicalFileSha256": "9eb0d11b0aed1ab58d4db314dc24c7c60ea72ca82dc972c7d437f6024838be51",
+        "semanticContentHash": "9679cc1fe3829f99fd5711713f6ee37b2c9f45ee162c6a737db050b725d48315",
+        "algorithm": "SHA-256"
+      }
+    }
+  },
+  "constitutionalInvariants": {
+    "causality": "ts = candle open-time (from field). No close-time lookahead.",
+    "monotonicity": "Verified: strictly ascending after sort+dedup.",
+    "syntheticProhibition": "COMPLIED: sourceType=LIVE_BROKER_STREAM_IQO (empirical live data).",
+    "targetLeakage": "N/A: raw stream dataset, no labels computed at canonicalization."
+  }
+}
