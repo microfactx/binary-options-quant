@@ -84,11 +84,17 @@
   },
   "paperDeployment": {
     "specId": "SPEC_PAPER_H010",
-    "specVersion": "1.0.0",
-    "specSha256": "cabb576f30e4ab994e216064f0915ee6ca43aa5231f7ef1c0dec71aefc2f9c71",
+    "specVersion": "1.1.0",
+    "specSha256": "9c78a451cabf20512fbac74733c5ed8e975181b88686b6eBA2EFA92DE45CEB70",
+    "parentSpecVersion": "1.0.0",
+    "parentSpecSha256": "cabb576f30e4ab994e216064f0915ee6ca43aa5231f7ef1c0dec71aefc2f9c71",
+    "parentFreezeCommit": "a5fad01d53b601648cdbdd72f34c49a32c0a7d63",
     "hypothesisSpecSha256": "9df1b6cdfe35ff42ab8de80f61ee15cbed52592688de36b600c0192cf814121e",
     "modelSourceSha256": "247f94bd5e1f478c6af275c13e3bf5f99831f82f81d3adacd78487cff611272c",
-    "gitCommit": "a5fad01d53b601648cdbdd72f34c49a32c0a7d63",
+    "supervisor": "scripts/execution/paper_supervisor_h010.js",
+    "supervisorSha256": "49ca56d3d350236a13e90b8ecd792f6394d384117b3e17aa33a0d12baeeff1e9",
+    "gitCommit": "9ae22bb647038ed7c0e8d3dff28d8776a0882fce",
+    "testEvidence": "5 suites 25/25 green (PaperSupervisor_H010 7, ModelRegistry_H010 6, LiveShadowExecutor_H010 2, PaperExecutionBridge 5, 048_adversarial_h010 5) at 9ae22bb",
     "deployTimestamp": "2026-09-17T06:10:22.000Z",
     "forwardStart": "2026-09-17T06:10:22.000Z",
     "isEnd": "2024-11-30T23:59:59.000Z",
@@ -102,6 +108,6 @@
     "ledgerPath": "research/execution/shadow_trades_h010.jsonl",
     "statusPath": "research/reports/SHADOW_FORWARD_TEST_STATUS_H010.json",
     "executor": "scripts/execution/live_shadow_executor_h010.js",
-    "provenanceReceipt": "research/reports/PROVENANCE_RECEIPT_PAPER_H010.json"
+    "provenanceReceipt": "research/reports/PROVENANCE_RECEIPT_PAPER_H010_v1.1.0.json"
   }
 }
