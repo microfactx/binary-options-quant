@@ -2,7 +2,7 @@
   "modelId": "MODEL_H010_BTCUSDT_ORDERFLOW_ABSORPTION",
   "version": "1.0.0",
   "registeredAt": "2026-09-17T00:55:00.000Z",
-  "state": "03_APPROVED_CANDIDATE",
+  "state": "04_PAPER/DEMO",
   "hypothesis": {
     "hypothesisId": "HYPOTHESIS_010",
     "researchFamily": "FAMILY_05_MULTI_TIMEFRAME_EXTREMES",
@@ -81,5 +81,27 @@
     "promotionToPaperDemo": "AUTHORIZED",
     "promotionToLiveProduction": "BLOCKED_PENDING_BROKER_EXECUTION_FIDELITY",
     "liveGatePrerequisite": "Bridge to live IQ Option BTC/USD or Binance Options execution, verifying latency budget < 250ms and zero quote slippage."
+  },
+  "paperDeployment": {
+    "specId": "SPEC_PAPER_H010",
+    "specVersion": "1.0.0",
+    "specSha256": "cabb576f30e4ab994e216064f0915ee6ca43aa5231f7ef1c0dec71aefc2f9c71",
+    "hypothesisSpecSha256": "9df1b6cdfe35ff42ab8de80f61ee15cbed52592688de36b600c0192cf814121e",
+    "modelSourceSha256": "247f94bd5e1f478c6af275c13e3bf5f99831f82f81d3adacd78487cff611272c",
+    "gitCommit": "a5fad01d53b601648cdbdd72f34c49a32c0a7d63",
+    "deployTimestamp": "2026-09-17T06:10:22.000Z",
+    "forwardStart": "2026-09-17T06:10:22.000Z",
+    "isEnd": "2024-11-30T23:59:59.000Z",
+    "venue": "BINANCE_SPOT",
+    "asset": "BTCUSDT",
+    "bridgeConfig": {
+      "maxLatencyMs": 250,
+      "payoutRate": 0.85,
+      "defaultStake": 1.0
+    },
+    "ledgerPath": "research/execution/shadow_trades_h010.jsonl",
+    "statusPath": "research/reports/SHADOW_FORWARD_TEST_STATUS_H010.json",
+    "executor": "scripts/execution/live_shadow_executor_h010.js",
+    "provenanceReceipt": "research/reports/PROVENANCE_RECEIPT_PAPER_H010.json"
   }
 }
