@@ -1,6 +1,6 @@
 # Project State: Binary Options Quant
 
-**Current Phase:** Commit 049 Complete (HYPOTHESIS_010 Approved: 62.59% WR, EV = +0.1578, Wilson Lower Bound 54.54% > 54.05% P_BE; 100% Monthly Consistency; MODEL_H010 Promoted to Candidate Model Registry)
+**Current Phase:** Commit 050 Complete (SPEC_PAPER_H010 v1.1.0 FROZEN 9C78A451; supervisor wrapper 49CA56D3; 7/7 lock PASS; 25/25 green; MODEL_H010 04_PAPER/DEMO; paper shadow start AUTHORIZED, live BLOCKED)
 
 ## Completed Milestones
 1. **Commit 001 - Core Types:** MarketObservation, BinaryOutcome, Signal, ProbabilitySnapshot.
@@ -308,7 +308,14 @@
     - **CRO Sovereign Deliberation:** **`PASS_RESEARCH_REGISTRY_GATE`** issued (`RISK_DECISION_048.json`, `CRO_VERDICT.md`, `PROVENANCE_RECEIPT_048.json`).
     - **Model Registry Manifest:** Emitted `artifacts/model_registry/MODEL_H010_MANIFEST.json` with 4-way consensus quorum (CRO, CTO, Controller, CEO). Added `tests/unit/ModelRegistry_H010.test.js`.
     - **Test Coverage:** 70 Jest test suites / 248 tests passing (100%).
+100. **Commit 050 - PAPER_H010 v1.0.0 Freeze, Custody Remediation, Supervisor v1.1.0 & 04_PAPER/DEMO Authorization:**
+    - **SPEC_PAPER_H010 v1.0.0 FROZEN:** Locked 15 dimensions (BTCUSDT BINANCE_SPOT, 60s/0.85/P_BE 54.0541%, fixed stake 1.0, Kelly prohibited, 30d/N=100, disconnect freeze). SHA-256 `CABB576F30E4AB994E216064F0915EE6CA43AA5231F7EF1C0DEC71AEFC2F9C71` (`a5fad01`). Single authorized config line `live_shadow_executor_h010.js:42` `10.0→1.0`.
+    - **Custody & Re-lock:** `PROVENANCE_RECEIPT_PAPER_H010.json` emitted; 7/7 gates PASS; manifest `03_APPROVED→04_PAPER/DEMO` applied (`0e7fc82`).
+    - **SPEC_PAPER_H010 v1.1.0 FROZEN:** Added separate supervisor wrapper `scripts/execution/paper_supervisor_h010.js` (`49CA56D3…`) — prewarm `>=1440+macro` gate, `>300s` disconnect freeze sticky no-restart, `30d/100 settled ex-PUSH → FINAL`, bridge `250/0.85/1.0` enforced, executor frozen untouched. SHA-256 `9C78A451CABF20512FBAC74733C5ED8E975181B88686B6EBA2EFA92DE45CEB70` (`9ae22bb`).
+    - **Test Remediation (no frozen mutation):** Fixed `PaperSupervisor_H010.test.js` time-travel arrival + `ModelRegistry_H010.test.js` `04_PAPER/DEMO` expectation. 5 suites / 25 tests green (5 bridge + 2 executor + 5 adversarial 048 + 6 registry + 7 supervisor).
+    - **Registry & Provenance:** `PROVENANCE_RECEIPT_PAPER_H010_v1.1.0.json` (`2B626436…`); manifest `paperDeployment v1.0.0→v1.1.0` applied (`a71a303`). `promotionToLiveProduction` remains `BLOCKED_PENDING_BROKER_EXECUTION_FIDELITY`.
+    - **Disposition:** Paper shadow start **AUTHORIZED** under v1.1.0 only (explicit config, BINANCE_SPOT, Wilson daily informational). Live capital deployment **BLOCKED**.
 
-**Next Objective:** Either (A) Configure and deploy the Paper Execution Bridge (`PaperExecutionBridge.js`) to run live shadow forward tests for `MODEL_H010` alongside `MODEL_H006`, or (B) Transition back to IQ Option venue discovery (`/discovery`) for XAU/USD to advance the gold microstructure track.
+**Next Objective:** Operate H010 paper shadow forward (30d/100 settled) with daily Wilson + ledger audit; in parallel, optionally advance IQ Option venue discovery (`/discovery`) for XAU/USD or propose H011 via new `/morq` (Kelly variant requires v1.2.0 + CRO).
 
 
