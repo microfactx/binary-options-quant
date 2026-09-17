@@ -1,0 +1,275 @@
+{
+  "receiptId": "PROVENANCE_RECEIPT_PAPER_H010",
+  "modelId": "MODEL_H010_BTCUSDT_ORDERFLOW_ABSORPTION",
+  "modelVersion": "1.0.0",
+  "hypothesisId": "HYPOTHESIS_010",
+  "hypothesisVersion": "1.0.0",
+  "specId": "SPEC_PAPER_H010",
+  "specVersion": "1.0.0",
+  "issuedBy": "EXPERIMENT_CONTROLLER",
+  "roster": "10_experiment_controller.md",
+  "skills": ["quant-experiment-orchestration", "quant-model-registry-governance"],
+  "timestamp": "2026-09-17T05:52:25.176Z",
+  "deployTimestamp": "2026-09-17T05:52:25.176Z",
+  "transition": {
+    "from": "03_APPROVED_CANDIDATE",
+    "to": "04_PAPER/DEMO",
+    "authorized": false,
+    "verdict": "BLOCKED"
+  },
+  "verdict": "BLOCKED",
+  "failClosed": true,
+  "blockReason": "FROZEN_ARTIFACT_NOT_COMMITTED: research/governance/SPEC_PAPER_H010_v1.0.0.json is UNTRACKED (never committed). Hash matches but git custody fails. Additionally scripts/execution/live_shadow_executor_h010.js is MODIFIED vs HEAD (concurrent uncommitted edit during lock). Fail-closed: no manifest overwrite, no delegation.",
+  "hashes": {
+    "specPaperFile": "research/governance/SPEC_PAPER_H010_v1.0.0.json",
+    "specPaperSha256": "cabb576f30e4ab994e216064f0915ee6ca43aa5231f7ef1c0dec71aefc2f9c71",
+    "specPaperSha256ComputedLower": "cabb576f30e4ab994e216064f0915ee6ca43aa5231f7ef1c0dec71aefc2f9c71",
+    "expectedSpecPaperSha256": "cabb576f30e4ab994e216064f0915ee6ca43aa5231f7ef1c0dec71aefc2f9c71",
+    "specPaperHashMatch": true,
+    "hypothesisFile": "research/governance/HYPOTHESIS_010.json",
+    "hypothesisFileSha256": "9df1b6cdfe35ff42ab8de80f61ee15cbed52592688de36b600c0192cf814121e",
+    "expectedSpecSha256": "9df1b6cdfe35ff42ab8de80f61ee15cbed52592688de36b600c0192cf814121e",
+    "hypothesisHashMatch": true,
+    "hypothesisStatus": "FROZEN",
+    "manifestHypothesisSpecSha256": "9df1b6cdfe35ff42ab8de80f61ee15cbed52592688de36b600c0192cf814121e",
+    "manifestSpecRefMatch": true,
+    "modelEntrypoint": "src/strategy/models/OrderFlowAbsorptionModel.js",
+    "modelSourceCodeSha256": "247f94bd5e1f478c6af275c13e3bf5f99831f82f81d3adacd78487cff611272c",
+    "expectedSourceCodeSha256": "247f94bd5e1f478c6af275c13e3bf5f99831f82f81d3adacd78487cff611272c",
+    "modelHashMatch": true,
+    "manifestFile": "artifacts/model_registry/MODEL_H010_MANIFEST.json",
+    "manifestFileSha256": "24378cdb9bf36c4144a1b0c23327f8755b957240a04bab6d11402fbe56ff3f04",
+    "negativeControl": "src/strategy/models/ReversedOrderFlowAbsorptionModel.js",
+    "negativeControlSha256": "cdd5689033d7aefacdbdf0ea048c8b0bba045c6ca698752f0868a4cf9feb4eb8",
+    "bridgeFile": "src/execution/PaperExecutionBridge.js",
+    "bridgeSha256": "7bfafb582bf59c9afeb34f8dfc950164817cdd071634ae1c1856346186697634",
+    "ledgerFile": "src/execution/TradeLedger.js",
+    "ledgerSha256": "6fe0df1779f40c409c972ec6da98022a3c6d06267d534e798de5e70ba6293aac",
+    "executorFile": "scripts/execution/live_shadow_executor_h010.js",
+    "executorSha256AtRead": "d460ceead57d7464429c76d49c20ae9b54128ab54e7e324c1b1a685d2bd22052",
+    "executorSha256AtLockClose": "d0716f820a698afdbaf181b781e2d1b6c3276bceff48290f560edd8904ecbefe0",
+    "executorSha256": "d0716f820a698afdbaf181b781e2d1b6c3276bceff48290f560edd8904ecbefe0",
+    "executorWorkingTree": "MODIFIED_VS_HEAD (defaultStake 10.0 -> 1.0 during lock window; NOT authored by Experiment Controller; left untouched per separation of duties)",
+    "executorDiff": "scripts/execution/live_shadow_executor_h010.js | 1 insertion, 1 deletion"
+  },
+  "dataset": {
+    "datasetId": "DATASET_BTCUSDT_5S_001",
+    "source": "BINANCE_PUBLIC_ARCHIVE_AGGTRADES",
+    "totalRows5s": 2643840,
+    "dateRange": "2024-06-01T00:00:00.000Z to 2024-11-30T23:59:59.000Z",
+    "inSample": {
+      "start": "2024-06-01T00:00:00.000Z",
+      "end": "2024-06-30T23:59:59.000Z"
+    },
+    "outOfSample": {
+      "start": "2024-07-01T00:00:00.000Z",
+      "end": "2024-11-30T23:59:59.000Z",
+      "totalDays": 153
+    },
+    "isEnd": "2024-11-30T23:59:59.000Z",
+    "provenanceArtifact": "research/reports/EXP_048/PROVENANCE_RECEIPT_048.json",
+    "partitions": [
+      "research/datasets/BTCUSDT/reconstructed_5s/BTCUSDT_5s_2024-06-01_to_2024-06-30.jsonl",
+      "research/datasets/BTCUSDT/reconstructed_5s/BTCUSDT_5s_2024-07-01_to_2024-08-31.jsonl",
+      "research/datasets/BTCUSDT/reconstructed_5s/BTCUSDT_5s_2024-09-01_to_2024-09-30.jsonl",
+      "research/datasets/BTCUSDT/reconstructed_5s/BTCUSDT_5s_2024-10-01_to_2024-11-30.jsonl"
+    ]
+  },
+  "git": {
+    "commit": "c2b44df0670f3b0ed3fd7d2577a5e324fcd480c4",
+    "commitSubject": "fix(data): commit 051 - filter strictly CLOSED candles in XAUUSD canonicalization and update manifest hashes",
+    "commitDate": "2026-09-16T23:19:30-03:00",
+    "branch": "master",
+    "statusPorcelain": [
+      "?? .env.example",
+      "?? research/governance/SPEC_PAPER_H010_v1.0.0.json",
+      "?? scratch/query_iqo_catalog.py"
+    ],
+    "diffHeadStat": "clean (no modified tracked files)",
+    "frozenArtifacts": {
+      "research/governance/HYPOTHESIS_010.json": {
+        "tracked": true,
+        "diffVsHead": "clean",
+        "lastCommit": "f02afd7 feat(research): commit 049 - HYPOTHESIS_010 freeze, blind OOS replay, CRO promotion & MODEL_H010 manifest"
+      },
+      "artifacts/model_registry/MODEL_H010_MANIFEST.json": {
+        "tracked": true,
+        "diffVsHead": "clean",
+        "lastCommit": "f02afd7 feat(research): commit 049 - HYPOTHESIS_010 freeze, blind OOS replay, CRO promotion & MODEL_H010 manifest"
+      },
+      "src/strategy/models/OrderFlowAbsorptionModel.js": {
+        "tracked": true,
+        "diffVsHead": "clean"
+      },
+      "research/governance/SPEC_PAPER_H010_v1.0.0.json": {
+        "tracked": false,
+        "diffVsHead": "UNTRACKED_NEVER_COMMITTED",
+        "gitLog": "empty (no commit contains this path)",
+        "verdict": "FAIL"
+      }
+    },
+    "cleanForFrozenArtifacts": false
+  },
+  "governanceQuorum": {
+    "manifestState": "03_APPROVED_CANDIDATE",
+    "chiefRiskOfficer": {
+      "verdict": "APPROVED",
+      "artifact": "research/reports/EXP_048/RISK_DECISION_048.json",
+      "artifactExists": true,
+      "artifactVerdict": "PASS"
+    },
+    "chiefTechnologyOfficer": {
+      "verdict": "APPROVED",
+      "artifact": "tests/adversarial/048_adversarial_h010.test.js",
+      "artifactExists": true
+    },
+    "experimentController": {
+      "verdict": "VERIFIED",
+      "artifact": "research/reports/EXP_048/PROVENANCE_RECEIPT_048.json",
+      "artifactExists": true
+    },
+    "chiefExecutiveOfficer": {
+      "verdict": "MANDATE_AUTHORIZED",
+      "statement": "Authorized for Shadow/Paper execution"
+    },
+    "quorumPresent": true,
+    "quorumPass": true,
+    "promotionToPaperDemo": "AUTHORIZED",
+    "promotionToLiveProduction": "BLOCKED_PENDING_BROKER_EXECUTION_FIDELITY",
+    "promotionGatePass": true
+  },
+  "oosContaminationCheck": {
+    "isEnd": "2024-11-30T23:59:59.000Z",
+    "forwardStart": "2026-09-17T05:52:25.176Z (deploy timestamp, live-only)",
+    "forwardAfterIsEnd": true,
+    "forwardUsesLiveFeedOnly": true,
+    "ledgerPreexists": false,
+    "ledgerPath": "research/execution/shadow_trades_h010.jsonl",
+    "statusPreexists": false,
+    "statusPath": "research/reports/SHADOW_FORWARD_TEST_STATUS_H010.json",
+    "prematureForward": false,
+    "preWarmRequirement": ">=1440 canonical M1 bars, no dispatch during warm-up",
+    "executorPreWarmImplemented": true,
+    "predictBeforeUpdate": true,
+    "verdict": "PASS"
+  },
+  "venueCheck": {
+    "manifestVenue": "BINANCE_SPOT",
+    "specVenue": "BINANCE_SPOT",
+    "executorAsset": "BTCUSDT",
+    "feed": "Binance Spot WebSocket live BTCUSDT M1 closed + aggTrades reconstructed 5s micro-bars (Rota B logic), BINANCE_SPOT only",
+    "venueSwitchDetected": false,
+    "iqOptionStringsInModel": false,
+    "verdict": "PASS"
+  },
+  "bridgeConfig": {
+    "maxLatencyMs": 250,
+    "payoutRate": 0.85,
+    "defaultStake": 1.0
+  },
+  "ledgerPath": "research/execution/shadow_trades_h010.jsonl",
+  "statusPath": "research/reports/SHADOW_FORWARD_TEST_STATUS_H010.json",
+  "specRequiredArtifacts": [
+    "research/execution/shadow_trades_h010.jsonl",
+    "research/reports/SHADOW_FORWARD_TEST_STATUS_H010.json",
+    "artifacts/model_registry/MODEL_H010_MANIFEST 03_APPROVED->04_PAPER/DEMO",
+    "research/reports/PROVENANCE_RECEIPT_PAPER_H010.json"
+  ],
+  "observations": [
+    "Executor scripts/execution/live_shadow_executor_h010.js read at lock-open with defaultStake fallback 10.0 (sha d460cead...); during the lock window the working tree was externally mutated to 1.0 (sha d0716f82..., diff 1+/1-). Experiment Controller did NOT author or approve this edit and did not revert it (Execution owns bridge config). The mutation aligns with spec 1.0 but breaks working-tree cleanliness: deploy MUST occur from a committed freeze, not a dirty tree. Recorded as integrity event reinforcing BLOCKED.",
+    "At daemon start, launch LiveShadowExecutorH010 with explicit { maxLatencyMs: 250, payoutRate: 0.85, defaultStake: 1.0 }; do not rely on code defaults and do not edit frozen model logic."
+  ],
+  "gates": [
+    {
+      "gate": "HYPOTHESIS_FROZEN_AND_SPEC_SHA",
+      "expected": "FROZEN + 9df1b6cdfe35ff42ab8de80f61ee15cbed52592688de36b600c0192cf814121e",
+      "actual": "FROZEN + file hash matches (case-insensitive)",
+      "result": "PASS"
+    },
+    {
+      "gate": "MODEL_SOURCE_SHA",
+      "expected": "247f94bd5e1f478c6af275c13e3bf5f99831f82f81d3adacd78487cff611272c",
+      "actual": "file hash matches (case-insensitive), parameters match hypothesis",
+      "result": "PASS"
+    },
+    {
+      "gate": "FOUR_WAY_QUORUM_AND_PAPER_AUTH",
+      "expected": "CRO APPROVED + CTO APPROVED + EC VERIFIED + CEO MANDATE_AUTHORIZED + promotionToPaperDemo AUTHORIZED",
+      "actual": "all present, referenced artifacts exist, state 03_APPROVED_CANDIDATE",
+      "result": "PASS"
+    },
+    {
+      "gate": "SPEC_PAPER_HASH",
+      "expected": "cabb576f30e4ab994e216064f0915ee6ca43aa5231f7ef1c0dec71aefc2f9c71",
+      "actual": "file hash matches",
+      "result": "PASS"
+    },
+    {
+      "gate": "GIT_CLEAN_FOR_FROZEN_ARTIFACTS",
+      "expected": "SPEC_PAPER + HYPOTHESIS + MANIFEST + MODEL committed at HEAD c2b44df, no untracked/modified frozen files",
+      "actual": "SPEC_PAPER_H010_v1.0.0.json UNTRACKED (??), never committed; HYPOTHESIS/MANIFEST/MODEL clean",
+      "result": "FAIL"
+    },
+    {
+      "gate": "NO_OOS_CONTAMINATION",
+      "expected": "IS ends 2024-11-30, forward starts at deploy timestamp live-only",
+      "actual": "IS ends 2024-11-30T23:59:59Z, deploy 2026-09-17T05:52:25Z, no ledger/status preexists",
+      "result": "PASS"
+    },
+    {
+      "gate": "NO_VENUE_SWITCH",
+      "expected": "BINANCE_SPOT only, no IQ Option switch",
+      "actual": "manifest/spec/executor all BTCUSDT/BINANCE_SPOT, model venue-agnostic",
+      "result": "PASS"
+    }
+  ],
+  "manifestTransitionPreconditions": {
+    "predecessorState": "03_APPROVED_CANDIDATE",
+    "successorState": "04_PAPER/DEMO",
+    "predecessorMatch": true,
+    "allGatesPass": false,
+    "productionManifestOverwritten": false,
+    "action": "PROPOSAL_ONLY"
+  },
+  "proposedManifestPatch": {
+    "_note": "PROPOSAL ONLY — NOT APPLIED. Apply only after BLOCKED gate is remediated and all gates re-verify PASS at a new commit.",
+    "modelId": "MODEL_H010_BTCUSDT_ORDERFLOW_ABSORPTION",
+    "version": "1.0.0",
+    "state": {
+      "from": "03_APPROVED_CANDIDATE",
+      "to": "04_PAPER/DEMO"
+    },
+    "paperDeployment": {
+      "specId": "SPEC_PAPER_H010",
+      "specVersion": "1.0.0",
+      "specSha256": "cabb576f30e4ab994e216064f0915ee6ca43aa5231f7ef1c0dec71aefc2f9c71",
+      "hypothesisSpecSha256": "9df1b6cdfe35ff42ab8de80f61ee15cbed52592688de36b600c0192cf814121e",
+      "modelSourceSha256": "247f94bd5e1f478c6af275c13e3bf5f99831f82f81d3adacd78487cff611272c",
+      "gitCommit": "c2b44df0670f3b0ed3fd7d2577a5e324fcd480c4",
+      "deployTimestamp": "2026-09-17T05:52:25.176Z",
+      "forwardStart": "2026-09-17T05:52:25.176Z",
+      "isEnd": "2024-11-30T23:59:59.000Z",
+      "venue": "BINANCE_SPOT",
+      "asset": "BTCUSDT",
+      "bridgeConfig": {
+        "maxLatencyMs": 250,
+        "payoutRate": 0.85,
+        "defaultStake": 1.0
+      },
+      "ledgerPath": "research/execution/shadow_trades_h010.jsonl",
+      "statusPath": "research/reports/SHADOW_FORWARD_TEST_STATUS_H010.json",
+      "executor": "scripts/execution/live_shadow_executor_h010.js",
+      "provenanceReceipt": "research/reports/PROVENANCE_RECEIPT_PAPER_H010.json"
+    },
+    "deploymentGates": {
+      "promotionToPaperDemo": "AUTHORIZED",
+      "promotionToLiveProduction": "BLOCKED_PENDING_BROKER_EXECUTION_FIDELITY"
+    }
+  },
+  "remediation": [
+    "git add research/governance/SPEC_PAPER_H010_v1.0.0.json && git commit (freeze commit) so HEAD contains the frozen spec; then re-run this governance lock to re-verify SPEC_PAPER tracked+clean at new HEAD.",
+    "At daemon start, launch LiveShadowExecutorH010 with explicit { maxLatencyMs: 250, payoutRate: 0.85, defaultStake: 1.0 } to override the 10.0 code default; do not edit frozen model logic.",
+    "After remediation, re-verify all 7 gates PASS, then apply proposedManifestPatch as atomic state transition 03_APPROVED_CANDIDATE -> 04_PAPER/DEMO in artifacts/model_registry/MODEL_H010_MANIFEST.json."
+  ],
+  "delegation": "NONE — fail-closed BLOCKED, no delegation to Execution or Registry."
+}

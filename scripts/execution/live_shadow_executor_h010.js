@@ -39,7 +39,7 @@ class LiveShadowExecutorH010 {
       ledger: this.ledger,
       maxLatencyMs: options.maxLatencyMs || 250,
       payoutRate: options.payoutRate || 0.85,
-      defaultStake: options.defaultStake || 10.0
+      defaultStake: options.defaultStake || 1.0
     });
 
     this.pendingTrades = [];
