@@ -1,6 +1,6 @@
 # Project State: Binary Options Quant
 
-**Current Phase:** Commit 047 Complete (H009 Binance Microstructure Reconstructed; Blind OOS Replay Completed: 60.26% WR, EV = +0.1149; CRO Issued Remediation for OOS Power Expansion to N >= 240)
+**Current Phase:** Commit 048 Complete (H009 5-Month OOS Replay Completed: 339 Trades, 55.75% WR; Empirical Regime Breakdown: Jul-Oct 58.05% vs Nov 47.22%; CRO VETO for Unconditioned Production; Architectural Foundation for H010 Macro-Conditioning)
 
 ## Completed Milestones
 1. **Commit 001 - Core Types:** MarketObservation, BinaryOutcome, Signal, ProbabilitySnapshot.
@@ -269,7 +269,32 @@
       - Proof 1 (Stats): 95% Wilson CI $[52.30\%, 67.72\%]$. Deficit of -175.57 bps on lower bound due to sample size power constraint ($N=151 \implies \text{CI half-width } \pm 7.7\text{ pp}$).
       - Proof 2 (Adversarial): PASS. Proof 3 (Provenance): PASS.
       - **Sovereign Verdict:** **`RETURN_FOR_REVIEW`** (`RISK_DECISION_047.json`, `CRO_VERDICT.md`). Issued `REMEDIATION_REQUIREMENT.json`.
-      - **Remediation Plan:** Prohibit any parameter tuning; reconstruct September 2024 (`2024-09-01` to `2024-09-30`) to reach $N \ge 240$ trades and push $W_{\text{low}} > 54.05\%$.
+98. **Commit 048 - 5-Month Out-of-Sample Expansion (Jul–Nov 2024), Regime Breakdown & CRO Sovereign VETO:**
+    - **Dataset Reconstruction Expansion:**
+      - Reconstructed September 2024 (30 days: 518,400 5s bars, 43,200 M1 bars).
+      - Reconstructed October–November 2024 (61 days: 1,054,080 5s bars, 87,840 M1 bars).
+      - Total OOS locked dataset: **153 calendar days** (July 1 to November 30, 2024), 2,643,840 5s bars, 220,320 M1 bars, 100% monotonic, zero lookahead.
+    - **Expanded Blind OOS Replay:**
+      - Resolved Trades ($N$): **339 trades** (189 Wins, 150 Losses, 1 Push).
+      - Overall Win Rate: **$55.75\%$** ($EV = +0.0314$).
+      - Alpha vs Naive Market Baseline ($49.71\%$): **$+6.04\text{ pp}$** over 211,991 candles.
+      - Alpha vs Reversed Control ($44.25\%$): **$+11.50\text{ pp}$** over 339 trades.
+      - Directional Symmetry: CALL $54.29\%$ ($N=175$), PUT $57.32\%$ ($N=164$). Imbalance $3.03\text{ pp} \le 8.0\text{ pp}$.
+    - **Empirical Monthly Regime Decomposition:**
+      - 2024-07 (Range-Bound Summer): $N=57$, 31W - 26L $\implies$ **$54.39\%$ WR** ($> P_{\text{BE}}$).
+      - 2024-08 (Liquidity Correction): $N=95$, 60W - 34L $\implies$ **$63.83\%$ WR** ($+9.78\text{ pp}$ surplus).
+      - 2024-09 (Pre-Election Reaccumulation): $N=62$, 35W - 27L $\implies$ **$56.45\%$ WR** ($+2.40\text{ pp}$ surplus).
+      - 2024-10 (Volatility Expansion): $N=54$, 29W - 25L $\implies$ **$53.70\%$ WR** ($-0.35\text{ pp}$).
+      - 2024-11 (US Election Breakout / Mega-Trend $68\text{k}\to99\text{k}$): $N=72$, 34W - 38L $\implies$ **$47.22\%$ WR** ($-6.83\text{ pp}$).
+      - *Core Epistemic Finding:* In balanced/mean-reverting months (Jul–Oct, $N=267$), the model produced **$58.05\%$ WR**. In runaway mega-trends (Nov), single-candle wicks are steamrolled by institutional momentum.
+    - **CRO Tri-Proof Sovereign Deliberation:**
+      - Proof 1 (Stats): 95% Wilson CI $[50.43\%, 60.95\%]$. Lower bound $W_{\text{low}} = 50.43\% \le P_{\text{BE}} = 54.05\%$ (deficit -362.42 bps).
+      - Proof 2 (Adversarial): PASS. Proof 3 (Provenance): PASS.
+      - **Verdict:** Sovereign **`VETO`** issued (`RISK_DECISION_047.json`, `CRO_VERDICT.md`).
+      - Classification: **`FALSIFIED_FOR_UNCONDITIONED_PRODUCTION_ARCHIVED`**.
+    - **Next Scientific Hypothesis (`HYPOTHESIS_010`):**
+      - Direct analog to H005 $\to$ H006: Microstructural wick exhaustion must be conditioned on macro-trend direction ($M=1440$ / 24h SMA filter) to eliminate trades taken against runaway institutional trends.
 
-**Next Objective:** Execute CRO Remediation: reconstruct September 2024 Binance `aggTrades` to expand locked OOS partition to $N \ge 240$ trades. Re-run blind OOS replay to clear the Wilson Lower Bound gate ($W_{\text{low}} > 54.05\%$) for formal promotion to the Model Registry.
+**Next Objective:** Either (A) Formulate and pre-register `HYPOTHESIS_010` (Macro-Conditioned Microstructure Stretch Reversion) to filter out adverse mega-trend periods like Nov 2024, or (B) Return to the live IQ Option XAU/USD venue recorder and deploy `/discovery` to finalize the H008 broker spec.
+
 

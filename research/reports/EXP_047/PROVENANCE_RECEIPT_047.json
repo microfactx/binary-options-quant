@@ -3,23 +3,44 @@
   "experimentId": "EXP_047_BTCUSDT_MICROSTRUCTURE_001",
   "hypothesisId": "HYPOTHESIS_009",
   "issuedBy": "EXPERIMENT_CONTROLLER",
-  "timestamp": "2026-09-16T23:43:00Z",
+  "timestamp": "2026-09-17T00:04:30Z",
   "specSha256": "eb5d35f3c4d20c4fee3336f4e38ff96fc5d39581da99c0b24640d74dbb1228c5",
   "datasetPartitions": {
     "inSample": {
-      "path": "research/datasets/BTCUSDT/reconstructed_5s/BTCUSDT_2024-06.parquet",
-      "granularity": "M1 and 5s micro-bars",
+      "file5s": "research/datasets/BTCUSDT/reconstructed_5s/BTCUSDT_5s_2024-06-01_to_2024-06-30.jsonl",
+      "file60s": "research/datasets/BTCUSDT/reconstructed_5s/BTCUSDT_60s_2024-06-01_to_2024-06-30.jsonl",
       "rows5s": 518400,
       "rowsM1": 43200,
       "purpose": "Calibration & rule discovery"
     },
-    "outOfSample": {
-      "path": "research/datasets/BTCUSDT/reconstructed_5s/BTCUSDT_2024-07_08.parquet",
-      "granularity": "M1 and 5s micro-bars",
-      "rows5s": 1071360,
-      "rowsM1": 89280,
-      "purpose": "Strict blind replay"
-    }
+    "outOfSample": [
+      {
+        "file5s": "research/datasets/BTCUSDT/reconstructed_5s/BTCUSDT_5s_2024-07-01_to_2024-08-31.jsonl",
+        "file60s": "research/datasets/BTCUSDT/reconstructed_5s/BTCUSDT_60s_2024-07-01_to_2024-08-31.jsonl",
+        "rows5s": 1071360,
+        "rowsM1": 89280,
+        "period": "2024-07-01 to 2024-08-31"
+      },
+      {
+        "file5s": "research/datasets/BTCUSDT/reconstructed_5s/BTCUSDT_5s_2024-09-01_to_2024-09-30.jsonl",
+        "file60s": "research/datasets/BTCUSDT/reconstructed_5s/BTCUSDT_60s_2024-09-01_to_2024-09-30.jsonl",
+        "rows5s": 518400,
+        "rowsM1": 43200,
+        "period": "2024-09-01 to 2024-09-30"
+      },
+      {
+        "file5s": "research/datasets/BTCUSDT/reconstructed_5s/BTCUSDT_5s_2024-10-01_to_2024-11-30.jsonl",
+        "file60s": "research/datasets/BTCUSDT/reconstructed_5s/BTCUSDT_60s_2024-10-01_to_2024-11-30.jsonl",
+        "rows5s": 1054080,
+        "rowsM1": 87840,
+        "period": "2024-10-01 to 2024-11-30"
+      }
+    ]
+  },
+  "totalOosCandles": {
+    "rows5s": 2643840,
+    "rowsM1": 220320,
+    "calendarDays": 153
   },
   "implementationFiles": [
     "src/strategy/models/BTCUSDTMicrostructureModel.js",

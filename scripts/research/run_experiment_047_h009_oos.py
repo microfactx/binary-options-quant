@@ -12,8 +12,6 @@ from datetime import datetime, timezone
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 DATA_DIR = PROJECT_ROOT / "research" / "datasets" / "BTCUSDT" / "reconstructed_5s"
-M1_FILE = DATA_DIR / "BTCUSDT_60s_2024-07-01_to_2024-08-31.jsonl"
-M5_FILE = DATA_DIR / "BTCUSDT_5s_2024-07-01_to_2024-08-31.jsonl"
 REPORTS_DIR = PROJECT_ROOT / "research" / "reports" / "EXP_047"
 REPORTS_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -27,34 +25,40 @@ def wilson_score_ci(k, n, confidence=0.95):
     spread = z * math.sqrt((p * (1 - p) + z2 / (4 * n)) / n) / denom
     return p, max(0.0, centre - spread), min(1.0, centre + spread)
 
-def load_jsonl_candles(filepath):
+def load_jsonl_candles(filepaths):
+    if not isinstance(filepaths, list):
+        filepaths = [filepaths]
     candles = {}
-    print(f"Loading {filepath.name} ...", flush=True)
-    with open(filepath, "r", encoding="utf-8") as f:
-        for line in f:
-            if not line.strip(): continue
-            try:
-                rec = json.loads(line)
-                ts_sec = rec["timestamp_ms"] // 1000
-                candles[ts_sec] = {
-                    "ts": ts_sec,
-                    "open": float(rec["open"]),
-                    "high": float(rec["high"]),
-                    "low": float(rec["low"]),
-                    "close": float(rec["close"]),
-                    "volume": float(rec.get("volume", 0)),
-                }
-            except Exception: pass
+    for fp in filepaths:
+        print(f"Loading {fp.name} ...", flush=True)
+        with open(fp, "r", encoding="utf-8") as f:
+            for line in f:
+                if not line.strip(): continue
+                try:
+                    rec = json.loads(line)
+                    ts_sec = rec["timestamp_ms"] // 1000
+                    candles[ts_sec] = {
+                        "ts": ts_sec,
+                        "open": float(rec["open"]),
+                        "high": float(rec["high"]),
+                        "low": float(rec["low"]),
+                        "close": float(rec["close"]),
+                        "volume": float(rec.get("volume", 0)),
+                    }
+                except Exception: pass
     return candles
 
 def run_replay(payout_rate=0.85):
-    if not M1_FILE.exists() or not M5_FILE.exists():
-        print(f"Error: OOS files missing. M1: {M1_FILE.exists()} | M5: {M5_FILE.exists()}")
-        return None
+    m1_files = sorted([f for f in DATA_DIR.glob("BTCUSDT_60s_*.jsonl") if "2024-06" not in f.name])
+    m5_files = sorted([f for f in DATA_DIR.glob("BTCUSDT_5s_*.jsonl") if "2024-06" not in f.name])
 
-    m1_dict = load_jsonl_candles(M1_FILE)
-    m5_dict = load_jsonl_candles(M5_FILE)
-    print(f"Loaded {len(m1_dict):,} M1 candles and {len(m5_dict):,} 5s candles.")
+    first_date = m1_files[0].name.split("_")[2]
+    last_date = m1_files[-1].name.split("_")[-1].replace(".jsonl", "")
+    replay_period = f"{first_date} to {last_date} (OOS Blind)"
+
+    m1_dict = load_jsonl_candles(m1_files)
+    m5_dict = load_jsonl_candles(m5_files)
+    print(f"Loaded {len(m1_dict):,} M1 candles and {len(m5_dict):,} 5s candles across {replay_period}.")
 
     m1_sorted_ts = sorted(m1_dict.keys())
     m1_list = [m1_dict[ts] for ts in m1_sorted_ts]
@@ -200,7 +204,7 @@ def run_replay(payout_rate=0.85):
         "experimentId": "EXP_047_BTCUSDT_MICROSTRUCTURE_001",
         "hypothesisId": "HYPOTHESIS_009",
         "status": "COMPLETED",
-        "replayPeriod": "2024-07-01 to 2024-08-31 (62 days)",
+        "replayPeriod": replay_period,
         "payoutRate": payout_rate,
         "breakevenHurdle": p_be,
         "h009Model": h009_stats,
