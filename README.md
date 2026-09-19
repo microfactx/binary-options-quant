@@ -1,119 +1,227 @@
 # Binary Options Quant Laboratory
 
 ![Status: Active Research](https://img.shields.io/badge/Status-Active_Research-blue)
-![Audit: Strict](https://img.shields.io/badge/Audit-Strict_Causality-success)
-![Coverage: 100%](https://img.shields.io/badge/Coverage-100%25-success)
+![Governance: Strict Causality](https://img.shields.io/badge/Governance-Strict_Causality-success)
+![Tests: 268](https://img.shields.io/badge/Tests-268-informational)
 ![License: MIT](https://img.shields.io/badge/License-MIT-gray)
 
-Um sistema quantitativo institucional e deliberadamente estruturado para pesquisa, auditoria e backtesting de derivativos de opções binárias. 
+An institutional-grade quantitative laboratory for researching, auditing and backtesting binary-option derivatives. This repository is not a trading bot — it is an **evidence laboratory designed to prove the absence or presence of statistical and economic edge** under extreme methodological rigor.
 
-Este repositório não é um "bot de trade". É um laboratório de evidências projetado para **provar a ausência ou presença de edge estatístico e econômico** sob condições extremas de rigor metodológico.
-
----
-
-## 🏛️ Filosofia e Epistemologia (O Contrato Quantitativo)
-
-O projeto opera sob um contrato estrito de integridade de dados e causalidade:
-
-1. **Strict Causality (No Look-ahead):** O estado OOS (Out-of-Sample) é atualizado de forma estritamente sequencial. O timestamp $t+1$ nunca influencia a decisão em $t$.
-2. **Barreira Econômica (Break-Even):** Para um payout de 0.80, a barreira não é 50%. A barreira é $P_{BE} = 55.56\%$. Qualquer modelo com *win rate* inferior a isso possui *Negative Expectancy (EV < 0)*, independentemente de p-values de edge direcional.
-3. **Imutabilidade e Congelamento (FROZEN):** Hipóteses são pré-declaradas em formato MD e **congeladas** em controle de versão antes de qualquer dado OOS ser consumido. É proibido o *post-hoc tuning* (ajuste de hiperparâmetros após ver o resultado).
-4. **Wilson Score Interval:** O motor de métricas utiliza o intervalo de confiança de Wilson (95%) em vez de Wald para lidar de maneira robusta com proporções extremas e amostras pequenas. A amostra mínima ($N_{min}$) para qualquer declaração estatística é 30.
+> **Current phase (see `STATE.md`): Commit 051** — `MODEL_H010` in `04_PAPER/DEMO` (paper shadow authorized, live blocked) · `H011` Phase-1 exploration protocol `[FROZEN]` · `DEMO_IQO_OPS v1.0.0` demo rails `[FROZEN]`.
 
 ---
 
-## 🏗️ Arquitetura do Sistema
+## 1. Epistemology — The Quantitative Contract
 
-O laboratório é dividido em pipelines independentes, garantindo que o carregamento de dados não contamine a modelagem, e que o motor de replay opere de forma agnóstica.
+| # | Principle | Formalization |
+|---|-----------|---------------|
+| 1 | Strict causality (no look-ahead) | `∀ d ∈ D, timestamp(d) ≤ t` — OOS state updates strictly sequentially; `t+1` never influences a decision at `t` |
+| 2 | Economic break-even barrier | `P_BE = 1 / (1 + r)` — e.g. payout `0.85 → 54.05%`. A win rate below the barrier is negative expectancy (`EV < 0`), regardless of directional p-values |
+| 3 | Estimand definition | `P_win = P(WIN \| resolved, non-PUSH)` — PUSH outcomes are excluded from the denominator and reported separately |
+| 4 | Minimum sample | `N ≥ 30` before any conclusive verdict; powered designs use `N_min` from formal power analysis (e.g. H011: `N ≥ 450` for `Δ = 4.45pp`, `α = 0.05`, `1−β = 0.80`) |
+| 5 | Statistical evidence gate | 95% Wilson Score lower bound must clear the barrier: `W_low > P_BE` (Wilson, never Wald) |
+| 6 | Immutability (`[FROZEN] ≠ EDITABLE`) | Hypotheses are pre-declared and cryptographically hashed **before** any OOS data is consumed. Post-hoc tuning is forbidden — any change is a new version with a new hash and provenance entry |
+| 7 | Signal ≠ instrument | The predictive signal and the payoff architecture are specified ex-ante and evaluated separately; the economic instrument cannot be chosen after observing results |
+| 8 | No synthetic substitution | Absent empirical data never authorizes silent synthetic replacement (`sourceType = SYNTHETIC` pipelines are segregated and can never feed an official economic verdict) |
+
+---
+
+## 2. System Architecture
 
 ```mermaid
 graph TD
-    subgraph Data Layer [Data Pipeline]
-        A[Binance Public Archive] -->|ZIP/CSV| B(ingest_dataset.js)
-        B -->|Canonicalization| C[DatasetLoader]
-        C -->|Integrity Check| D[DatasetValidator]
-        D -->|Immutable| E[(Frozen Dataset)]
+    subgraph DataLayer [Data Pipeline]
+        A[Binance Public Archive / Dukascopy / IQO Live Stream] -->|ingest + canonicalize| B(DatasetLoader)
+        B -->|monotonicity, gaps, OHLC| C[DatasetValidator]
+        C -->|SHA-256 manifest| D[(Frozen Dataset)]
     end
 
-    subgraph Strategy Layer [Research & Strategy]
-        F[FeatureEngine] -->|Causal Updates| G[DisplacementModel]
-        G -->|Rule-Based| H[Signal]
-        H -->|Historical Train| I[ProbabilitySnapshot]
+    subgraph StrategyLayer [Research & Strategy]
+        E[FeatureEngine<br/>causal, zero-leakage] --> F[Strategy Model<br/>frozen logic]
+        F -->|CALL / PUT / NO_SIGNAL| G[Signal]
     end
 
-    subgraph Execution Layer [Simulation & Audit]
-        E --> J[ReplayEngine]
-        G --> J
-        I --> J
-        J -->|Delayed Resolution| K[BinaryOutcome]
-        K --> L[MetricsEngine]
-        L -->|Wilson CI, EV, Brier| M((Audit Report))
+    subgraph ValidationLayer [Blind Evaluation]
+        D --> H[Walk-Forward Replay<br/>Predict BEFORE Update]
+        F --> H
+        H -->|delayed resolution| I[Outcomes<br/>WIN / LOSS / PUSH]
+        I --> J[MetricsEngine<br/>Wilson CI, EV, Brier, calibration]
+        J --> K[Adversarial Battery<br/>null, permutation, fuzzing]
+    end
+
+    subgraph GovernanceLayer [Risk & Promotion]
+        J --> L{CRO Tri-Proof Gate}
+        K --> L
+        M[Provenance Receipt] --> L
+        L -->|PASS + 4-way quorum| N[Model Registry]
+        L -->|VETO| O[Archived as FALSIFIED]
+    end
+
+    subgraph ExecutionLayer [Paper / Demo only]
+        N --> P[PaperExecutionBridge<br/>latency budget, disconnect freeze]
+        P --> Q[(TradeLedger<br/>append-only JSONL)]
     end
 ```
 
+### 2.1 Multi-agent governance (separation of duties)
+
+```text
+                          EXECUTIVE BOARD / CEO  (mandates & capital)
+                                  │
+            ┌─────────────────────┴─────────────────────┐
+            ▼                                           ▼
+  CHIEF RISK OFFICER (CRO)                  CHIEF TECHNOLOGY OFFICER (CTO)
+  sovereign VETO · Tri-Proof gate           architecture · determinism
+            │                                           │
+            ├───────────────┬───────────────┬───────────┤
+            ▼               ▼               ▼           ▼
+  EXPERIMENT CONTROLLER  CORE TECH   TRADING & EXECUTION  │
+  lineage · run IDs      (engine,   (bridges,             │
+  freeze gates            red-team)  reconciliation)      │
+            │                                            │
+    ┌───────┴───────┐                                     │
+    ▼               ▼                                     │
+ ALPHA RESEARCH   STATISTICAL VALIDATION ◄────────────────┘
+ (hypotheses,      (blind OOS replay)
+  features)
+```
+
+Golden rule: *agents may collaborate; frozen artifacts may not.* Research, engineering and validation see **only** In-Sample data; the OOS partition stays locked under the Experiment Controller until blind replay (Chinese Walls).
+
+### 2.2 Research lifecycle (state machine)
+
+```mermaid
+stateDiagram-v2
+    [*] --> INTENT
+    INTENT --> ELICITING : Quant-Grill opens SPEC_DRAFT
+    ELICITING --> AMBIGUOUS : missing dimensions
+    AMBIGUOUS --> ELICITING : clarified
+    ELICITING --> READY_FOR_FREEZE : 15/15 dimensions explicit
+    READY_FOR_FREEZE --> FROZEN : hash + provenance receipt
+    FROZEN --> DISPATCH : parallel specialist workflows
+    DISPATCH --> VALIDATION : blind OOS + adversarial + provenance
+    VALIDATION --> PROMOTED : CRO PASS + 4-way quorum
+    VALIDATION --> ARCHIVED : CRO VETO (no rescue, no curve-fitting)
+    PROMOTED --> PAPER_DEMO : shadow execution, ledger audit
+    PAPER_DEMO --> [*] : live BLOCKED until Level-2 fidelity
+```
+
+Any "small tweak" after freezing is a **new version** (new hash, new provenance entry) — never an edit.
+
+### 2.3 Validation gates (all must pass independently)
+
+```mermaid
+flowchart LR
+    S([Frozen spec + code + data]) --> N{N ≥ N_min?}
+    N -->|no| INC[INCONCLUSIVE]
+    N -->|yes| W{W_low > P_BE?}
+    W -->|no| VETO1[CRO VETO]
+    W -->|yes| A{Adversarial battery PASS?}
+    A -->|no| VETO2[CRO VETO]
+    A -->|yes| R{Replicates on independent sample?}
+    R -->|no| VETO3[CRO VETO]
+    R -->|yes| P[Candidate Registry]
+```
+
+Apparent profitability alone never promotes: sample gate → Wilson gate → robustness gate (Mulberry32 null, label permutations, PUSH stress, boundary fuzzing) → replication gate → 4-way consensus (CRO, CTO, Experiment Controller, CEO).
+
 ---
 
-## 📂 Estrutura de Diretórios
+## 3. Track Registry
+
+| Track | State | Description |
+|-------|-------|-------------|
+| `MODEL_H010` (HYPOTHESIS_010) | `04_PAPER/DEMO` — paper AUTHORIZED, live BLOCKED | Macro-conditioned order-flow absorption on BTCUSDT/BINANCE_SPOT, 60s, payout 0.85. Blind OOS 153d: N=147, WR 62.59%, `W_low 54.54% > P_BE 54.05%` (+48 bps), 5/5 months profitable. Sole validated champion. Spec `SPEC_PAPER_H010 v1.1.0` |
+| `H011` | `F1 [FROZEN]` — IS collection only | IQO-native XAUUSD 60s line, two-phase design: Phase 1 exploratory calibration on fresh 30d IS (CLOSED-only, dedup `from/id`, gaps >30min quarantined) → Phase 2 single frozen hypothesis → fresh blind OOS (`N ≥ 450`, `Δ = 4.45pp`). Practice-only, live BLOCKED |
+| `DEMO_IQO_OPS v1.0.0` | `[FROZEN]` ops rails | IQO practice/demo scaffold: BTC/USD regular (OTC rejected), 60s, fixed 1.0U stake, 10U daily stop, >300s disconnect sticky freeze, observed-payout-only fills, signal DISABLED (zero trades out of the box). Outputs quarantined — zero evidence power |
+| H001/H002/H004/H005/H007/H009 | `FALSIFIED & ARCHIVED` | Falsified with full post-mortems; no parameter rescue. H006 promoted then superseded in lineage by H010 |
+| H008 | Abandoned pre-freeze | Draft never frozen; superseded by the clean H011 line |
+
+---
+
+## 4. Repository Structure
 
 ```text
 .
-├── .agents/                 # Memória e metadados de orquestração de IA
+├── .agents/                   # Orchestrator constitution, roster, rules, skills
+├── artifacts/model_registry/  # Promoted model manifests (4-way quorum signatures)
 ├── research/
-│   ├── datasets/            # Datasets canônicos e manifestos com hashes SHA-256
-│   ├── hypotheses/          # Hipóteses pré-declaradas e congeladas (ex: HYPOTHESIS_001.md)
-│   └── reports/             # Relatórios JSON de OOS Walk-Forward
-├── scripts/                 # Scripts de ingestão, replay e baseline OOS
+│   ├── datasets/              # Canonical datasets + SHA-256 manifests
+│   ├── execution/             # Venue specs, discovery receipts, paper ledgers
+│   ├── experiments/           # Experiment manifests (EXP_*)
+│   ├── governance/            # Frozen specs, registries, provenance, risk decisions
+│   ├── hypotheses/            # Pre-declared hypothesis documents
+│   └── reports/               # OOS validation, adversarial audits, post-mortems
+├── scripts/
+│   ├── data_acquisition/      # Recorder, canonicalization, fidelity audit
+│   ├── execution/             # Paper supervisors, shadow executors, demo-ops rails
+│   └── research/              # Blind OOS replay harnesses
 ├── src/
-│   ├── core/                # Primitivas imutáveis (Signal, MarketObservation, BinaryOutcome)
-│   ├── data/                # Validadores estruturais e loaders estritos
-│   ├── replay/              # Motor causal de replay (Delayed Resolution)
-│   ├── research/            # Motores de calibração, métricas e baselines
-│   ├── strategy/            # Feature Engine e Classificadores
-│   └── validation/          # Walk-Forward rolling validators
-└── tests/                   # 100+ testes unitários e adversariais
+│   ├── core/                  # Immutable primitives (Signal, MarketObservation, ...)
+│   ├── data/                  # Loaders and structural validators
+│   ├── execution/             # PaperExecutionBridge, TradeLedger (frozen, reused)
+│   ├── replay/                # Causal replay engine (delayed resolution)
+│   ├── research/              # Target/EV/calibration/metrics engines
+│   ├── strategy/models/       # Frozen strategy implementations + reversed controls
+│   └── validation/            # Walk-forward validators
+└── tests/
+    ├── adversarial/           # Red-team suites (null, permutation, fuzzing, leakage)
+    ├── integration/           # Temporal/causal integration checks
+    └── unit/                  # Unit + governance tests (73 suites / 268 tests)
 ```
 
 ---
 
-## 🔬 Estado Atual (Commit 008)
+## 5. Getting Started
 
-O projeto está atualmente na fase **008 (Strategy Hypothesis)**. 
-A infraestrutura principal está 100% testada e congelada.
+### Prerequisites
 
-- **006B:** Baseline Real Market (BTCUSDT Jan/24) executado. Edge não detectado (50.43%). **[FROZEN]**
-- **007:** Validação Adversarial e de Robustez (100 testes passando). **[FROZEN]**
-- **008.1:** `DATASET_002` (Fev-Mai 2024, 174.240 linhas, zero gaps) ingerido. **[FROZEN]**
-- **008.2:** `HYPOTHESIS_001` (Short-Horizon Momentum/Displacement) pré-declarada. **[FROZEN]**
-- **Em desenvolvimento:** Implementação do `FeatureEngine` causal e `DisplacementModel` baseados na probabilidade condicional histórica.
-
-*(Veja o arquivo `STATE.md` para um detalhamento de todas as fases do projeto).*
-
----
-
-## 🚀 Getting Started
-
-### Pré-requisitos
-- Node.js (v18+)
+- Node.js v18+
 - Git
+- Python 3.11+ (data-acquisition recorder only)
 
-### Instalação
+### Install
+
 ```bash
-git clone https://github.com/SEU_USUARIO/binary-options-quant.git
+git clone https://github.com/microfactx/binary-options-quant.git
 cd binary-options-quant
 npm install
 ```
 
-### Rodando a Suíte de Auditoria (Testes Adversariais)
-Para garantir a sanidade da matemática e da causalidade do seu ambiente local:
+### Run the test suite
+
 ```bash
-npx jest
+node node_modules/jest/bin/jest.js
 ```
-*(Todos os 100 testes divididos em integridade, controle negativo, calibração matemática e estresse temporal devem passar).*
+
+> 268 tests across 73 suites. 13 failures are pre-existing and unrelated to active tracks (frozen-SHA drift in superseded registry manifests; canonical CSVs absent from the checkout) — documented in `DEMO_IQO_OPS_FENCE_RECEIPT_v1.0.0.json`. The active-track suites (`DemoIqoOps` 11/11, `PaperSupervisor_H010`, `PaperExecutionBridge`, `048_adversarial_h010`) are green.
+
+### Operate the H010 paper shadow (authorized)
+
+```js
+const PaperSupervisorH010 = require('./scripts/execution/paper_supervisor_h010');
+const sup = new PaperSupervisorH010(); // frozen bridgeConfig {250, 0.85, 1.0}, BINANCE_SPOT
+sup.preWarm(canonicalM1Bars);          // gate: >=1440 bars + macro SMA, zero dispatch before
+sup.processCandle(m1, micro5s);        // Predict BEFORE Update, 30d/100-settled enforcer
+```
+
+Live capital deployment is `BLOCKED` pending broker execution fidelity (latency <250ms, zero slippage proof) + new Tri-Proof + quorum.
 
 ---
 
-## ⚖️ Licença e Aviso Legal
+## 6. Key Invariants (non-negotiable)
 
-Distribuído sob a licença MIT. 
+1. **Causality:** no feature, however derived, may use data timestamped after the decision point.
+2. **Estimand:** `P_win = P(WIN | resolved, non-PUSH)` — PUSH never converts to WIN/LOSS.
+3. **Break-even:** `W_low > 1/(1+r)` — the lower bound, not the point estimate, must clear the payout hurdle.
+4. **Frozen mutation:** editing a `[FROZEN]` artifact without a new version + hash is a governance violation.
+5. **OOS blindness:** no OOS window may be excluded/weighted on TRAIN metrics unless pre-registered.
+6. **Fail-closed:** unverifiable hash, schema, registry state or lineage ⇒ `STATE = BLOCKED`, no fallback execution.
 
-**Este software destina-se estritamente à pesquisa quantitativa.** Nenhuma parte deste repositório constitui conselho financeiro ou recomendação de investimento. Os resultados obtidos em backtests passados não são garantia de desempenho futuro, especialmente em mercados de opções binárias que possuem esperança matemática intrinsecamente negativa devido à fricção do *payout*.
+---
+
+## 7. License & Disclaimer
+
+Distributed under the MIT License.
+
+**Strictly quantitative research software.** Nothing in this repository constitutes financial advice or investment recommendation. Past backtest results guarantee nothing about future performance — binary options carry intrinsically negative mathematical expectancy due to payout friction, which is precisely what this laboratory measures.
