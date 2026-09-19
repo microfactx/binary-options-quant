@@ -1,6 +1,6 @@
 # Project State: Binary Options Quant
 
-**Current Phase:** Commit 050 Complete (SPEC_PAPER_H010 v1.1.0 FROZEN 9C78A451; supervisor wrapper 49CA56D3; 7/7 lock PASS; 25/25 green; MODEL_H010 04_PAPER/DEMO; paper shadow start AUTHORIZED, live BLOCKED)
+**Current Phase:** Commit 051 Complete (H011 F1 exploration protocol FROZEN f5d19515; DEMO_IQO_OPS v1.0.0 scaffold FROZEN 96b4c460; 11/11 fence tests green; full suite 255/268 with 13 pre-existing unrelated failures; H010 untouched 04_PAPER/DEMO; live BLOCKED)
 
 ## Completed Milestones
 1. **Commit 001 - Core Types:** MarketObservation, BinaryOutcome, Signal, ProbabilitySnapshot.
@@ -316,6 +316,11 @@
     - **Registry & Provenance:** `PROVENANCE_RECEIPT_PAPER_H010_v1.1.0.json` (`2B626436…`); manifest `paperDeployment v1.0.0→v1.1.0` applied (`a71a303`). `promotionToLiveProduction` remains `BLOCKED_PENDING_BROKER_EXECUTION_FIDELITY`.
     - **Disposition:** Paper shadow start **AUTHORIZED** under v1.1.0 only (explicit config, BINANCE_SPOT, Wilson daily informational). Live capital deployment **BLOCKED**.
 
-**Next Objective:** Operate H010 paper shadow forward (30d/100 settled) with daily Wilson + ledger audit; in parallel, optionally advance IQ Option venue discovery (`/discovery`) for XAU/USD or propose H011 via new `/morq` (Kelly variant requires v1.2.0 + CRO).
+**Next Objective:** Discovery Receipt IQO (`/discovery?asset=XAUUSD`) → H011 IS COUNTING (30d); H010 paper shadow forward remains AUTHORIZED; DEMO_IQO_OPS v1.1.0 coinflip-scaffold proposed (seed 42, simulated dryrun), NOT confirmed/built. Live BLOCKED on all tracks.
+
+101. **Commit 051 - H011 Phase-1 Exploration Protocol Freeze & DEMO_IQO_OPS v1.0.0 Scaffold:**
+    - **H011 F1 [FROZEN]:** `SPEC_H011_PHASE1_EXPLORATION_PROTOCOL_v1.0.0.json` (SHA-256 `f5d19515…`) + freeze receipt (4/4 gates PASS). Via 1 locked: IS novo IQO XAUUSD 60s do zero (30d corridos, CLOSED-only, dedup from/id, gap >30min quarantined, clock keeps running, no selective extension); Δ=4.45pp, N_min=450; P_BE via discovery OBSERVED_ONLY; OOS fresco-cego pós-F2; single-hypothesis rule; Practice-only, live BLOCKED. H008 abandoned pre-freeze, H009/H010 untouched, zero inheritance.
+    - **DEMO_IQO_OPS v1.0.0 [FROZEN]:** Separate fenced demo-ops track (fences `96b4c460…`, supervisor `1b81cfee…`, payout observer `bc9e7fc3…`, receipt `research/governance/DEMO_IQO_OPS_FENCE_RECEIPT_v1.0.0.json`): BTC/USD regular (OTC + wrong-asset rejected), 60s, stake 1.0 fixed (Martingale/Kelly prohibited, tamper logged), daily stop 10U UTC restart-safe, disconnect/gap>300s sticky freeze, payout-observed-only dispatch (PAYOUT_UNKNOWN blocks), signal DISABLED (zero trades out of the box; enabling needs new version+hash). Outputs quarantined, zero evidence power, H010 logic forbidden by construction (governance test enforced).
+    - **Tests:** `tests/unit/DemoIqoOps.test.js` 11/11 PASS. Full suite 255/268 — 13 failures pre-existing & unrelated (frozen-SHA drift H006/H010 manifests on untouched files; missing XAUXAG canonical CSV in checkout; `git diff` empty of tracked modifications).
 
 
